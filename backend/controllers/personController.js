@@ -84,9 +84,9 @@ const updatePersonStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const updatedPerson = await Person.findByIdAndUpdate(
-      req.params.id, 
-      { status }, 
-      { new: true }
+      req.params.id,
+      { status },
+      { new: true },
     );
     res.status(200).json({ success: true, data: updatedPerson });
   } catch (error) {
@@ -111,18 +111,20 @@ const getDashboardStats = async (req, res) => {
   try {
     // 1. Total Sheltered count
     const totalSheltered = await Person.countDocuments({ status: "Sheltered" });
-    
+
     // 2. Reunited count
     const reunited = await Person.countDocuments({ status: "Reunited" });
-    
-    // 3. Medical Emergency count 
-    const medicalNeeds = await Person.countDocuments({ status: "Medical Emergency" });
 
-    // 4. Recently Added 
+    // 3. Medical Emergency count
+    const medicalNeeds = await Person.countDocuments({
+      status: "Medical Emergency",
+    });
+
+    // 4. Recently Added
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const recentlyAdded = await Person.countDocuments({ 
-      createdAt: { $gte: sevenDaysAgo } 
+    const recentlyAdded = await Person.countDocuments({
+      createdAt: { $gte: sevenDaysAgo },
     });
 
     res.status(200).json({
@@ -131,8 +133,8 @@ const getDashboardStats = async (req, res) => {
         totalSheltered,
         reunited,
         medicalNeeds,
-        recentlyAdded
-      }
+        recentlyAdded,
+      },
     });
   } catch (error) {
     console.error("Error fetching stats:", error);
@@ -145,5 +147,5 @@ module.exports = {
   getAllPersons,
   updatePersonStatus,
   deletePerson,
-  getDashboardStats 
+  getDashboardStats,
 };

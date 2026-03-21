@@ -491,6 +491,339 @@ const Records = () => {
   );
 };
 
+// ==========================================
+// 💰 DONATIONS COMPONENT
+// ==========================================
+const Donations = () => {
+  const [donations, setDonations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadDonations = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/donations/all");
+        const json = await res.json();
+        if (json.success) setDonations(json.data);
+      } catch (e) {
+        console.error("Failed to load donations", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadDonations();
+  }, []);
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors duration-300">
+      <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+        <h2 className="text-xl font-bold text-ngo-dark dark:text-white font-heading">
+          Donations
+        </h2>
+        <span className="text-sm font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-3 py-1 rounded-full">
+          {donations.length} Records
+        </span>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[700px]">
+          <thead>
+            <tr className="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 text-sm border-b dark:border-gray-700">
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Donor Info
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Amount
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Payment Mode
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Ref ID
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Date
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+            {loading ? (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="p-8 text-center text-gray-500 dark:text-gray-400"
+                >
+                  Loading donations...
+                </td>
+              </tr>
+            ) : donations.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="p-8 text-center text-gray-500 dark:text-gray-400"
+                >
+                  No donations yet.
+                </td>
+              </tr>
+            ) : (
+              donations.map((d) => (
+                <tr
+                  key={d._id}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                >
+                  <td className="p-4">
+                    <div className="font-medium text-gray-800 dark:text-gray-200">
+                      {d.name}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {d.phone} | {d.email || "No Email"}
+                    </div>
+                    {d.message && (
+                      <div className="text-xs text-blue-500 mt-1 italic">
+                        "{d.message}"
+                      </div>
+                    )}
+                  </td>
+                  <td className="p-4 font-bold text-green-600 dark:text-green-400">
+                    ₹{d.amount}
+                  </td>
+                  <td className="p-4 text-gray-600 dark:text-gray-300">
+                    {d.paymentMode}
+                  </td>
+                  <td className="p-4 text-gray-500 dark:text-gray-400 text-sm">
+                    {d.referenceId || "N/A"}
+                  </td>
+                  <td className="p-4 text-gray-500 dark:text-gray-400 text-sm">
+                    {new Date(d.createdAt).toLocaleDateString("en-IN")}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
+// 🤝 VOLUNTEERS COMPONENT
+// ==========================================
+const Volunteers = () => {
+  const [volunteers, setVolunteers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadVolunteers = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/volunteers/all");
+        const json = await res.json();
+        if (json.success) setVolunteers(json.data);
+      } catch (e) {
+        console.error("Failed to load volunteers", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadVolunteers();
+  }, []);
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors duration-300">
+      <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+        <h2 className="text-xl font-bold text-ngo-dark dark:text-white font-heading">
+          Volunteers
+        </h2>
+        <span className="text-sm font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 px-3 py-1 rounded-full">
+          {volunteers.length} Applications
+        </span>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[700px]">
+          <thead>
+            <tr className="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 text-sm border-b dark:border-gray-700">
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Name
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Phone
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                How they can help
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Date Applied
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+            {loading ? (
+              <tr>
+                <td
+                  colSpan="4"
+                  className="p-8 text-center text-gray-500 dark:text-gray-400"
+                >
+                  Loading volunteers...
+                </td>
+              </tr>
+            ) : volunteers.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="4"
+                  className="p-8 text-center text-gray-500 dark:text-gray-400"
+                >
+                  No applications yet.
+                </td>
+              </tr>
+            ) : (
+              volunteers.map((v) => (
+                <tr
+                  key={v._id}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                >
+                  <td className="p-4 font-medium text-gray-800 dark:text-gray-200">
+                    {v.name}
+                  </td>
+                  <td className="p-4 text-gray-600 dark:text-gray-300">
+                    {v.phone}
+                  </td>
+                  <td
+                    className="p-4 text-gray-600 dark:text-gray-400 max-w-xs truncate"
+                    title={v.helpText}
+                  >
+                    {v.helpText}
+                  </td>
+                  <td className="p-4 text-gray-500 dark:text-gray-400 text-sm">
+                    {new Date(v.createdAt).toLocaleDateString("en-IN")}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
+// 🚨 RESCUE REQUESTS COMPONENT
+// ==========================================
+const RescueRequests = () => {
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadRequests = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:5000/api/rescue-requests/all",
+        );
+        const json = await res.json();
+        if (json.success) setRequests(json.data);
+      } catch (e) {
+        console.error("Failed to load rescues", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadRequests();
+  }, []);
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors duration-300">
+      <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+        <h2 className="text-xl font-bold text-red-600 dark:text-red-500 font-heading">
+          Emergency Rescue Alerts
+        </h2>
+        <span className="text-sm font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-3 py-1 rounded-full animate-pulse">
+          {requests.length} Alerts
+        </span>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[800px]">
+          <thead>
+            <tr className="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 text-sm border-b dark:border-gray-700">
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Location
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Condition
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Reporter Details
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider text-center">
+                Photo
+              </th>
+              <th className="p-4 font-semibold uppercase tracking-wider">
+                Date
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+            {loading ? (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="p-8 text-center text-gray-500 dark:text-gray-400"
+                >
+                  Loading alerts...
+                </td>
+              </tr>
+            ) : requests.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="p-8 text-center text-gray-500 dark:text-gray-400"
+                >
+                  No active alerts.
+                </td>
+              </tr>
+            ) : (
+              requests.map((r) => (
+                <tr
+                  key={r._id}
+                  className="hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors"
+                >
+                  <td className="p-4 font-medium text-gray-800 dark:text-gray-200">
+                    {r.location}
+                  </td>
+                  <td className="p-4 text-gray-600 dark:text-gray-300">
+                    {r.condition}
+                  </td>
+                  <td className="p-4">
+                    <div className="text-gray-800 dark:text-gray-200">
+                      {r.reporterName || "Anonymous"}
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {r.reporterPhone}
+                    </div>
+                  </td>
+                  <td className="p-4 text-center">
+                    {r.photoUrl ? (
+                      <a
+                        href={`http://localhost:5000${r.photoUrl}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 font-medium underline text-sm"
+                      >
+                        View Image
+                      </a>
+                    ) : (
+                      <span className="text-gray-400 text-sm">No Photo</span>
+                    )}
+                  </td>
+                  <td className="p-4 text-gray-500 dark:text-gray-400 text-sm">
+                    {new Date(r.createdAt).toLocaleString("en-IN")}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
 // --- MAIN DASHBOARD LAYOUT ---
 
 const AdminDashboard = () => {
@@ -518,6 +851,9 @@ const AdminDashboard = () => {
     { id: "dashboard", label: "Dashboard", icon: "📊" },
     { id: "add", label: "Add Person", icon: "➕" },
     { id: "records", label: "View Records", icon: "📁" },
+    { id: "donations", label: "Donations", icon: "💰" },
+    { id: "volunteers", label: "Volunteers", icon: "🤝" },
+    { id: "rescues", label: "Rescue Alerts", icon: "🚨" },
   ];
 
   const handleLogout = () => {
@@ -532,6 +868,12 @@ const AdminDashboard = () => {
         return <AddPerson />;
       case "records":
         return <Records />;
+      case "donations":
+        return <Donations />;
+      case "volunteers":
+        return <Volunteers />;
+      case "rescues":
+        return <RescueRequests />;
       default:
         return <DashboardOverview />;
     }

@@ -1,6 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 
 const RescueRequest = () => {
+  const [formData, setFormData] = useState({
+    location: "",
+    condition: "",
+    reporterName: "",
+    reporterPhone: "",
+    photo: null,
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const submitData = new FormData();
+      submitData.append("location", formData.location);
+      submitData.append("condition", formData.condition);
+      submitData.append("reporterName", formData.reporterName);
+      submitData.append("reporterPhone", formData.reporterPhone);
+      if (formData.photo) {
+        submitData.append("photo", formData.photo);
+      }
+
+      const res = await fetch("http://localhost:5000/api/rescue-requests/add", {
+        method: "POST",
+        body: submitData,
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Rescue alert sent successfully! Help is on the way.");
+        setFormData({
+          location: "",
+          condition: "",
+          reporterName: "",
+          reporterPhone: "",
+          photo: null,
+        });
+        document.getElementById("photo-upload").value = "";
+      } else {
+        alert(data.message || "Failed to send alert.");
+      }
+    } catch (error) {
+      alert("Server error. Please try again or call the emergency number.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="pt-24 pb-12 px-4 font-sans transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
@@ -26,7 +74,6 @@ const RescueRequest = () => {
               <p className="text-red-100 mb-6">
                 Form bharne ka time nahi hai? Direct call karein:
               </p>
-              {/* 🔥 Box text color adjusted for red contrast */}
               <div className="bg-white text-ngo-red text-3xl font-mono font-bold py-4 rounded-xl shadow-inner">
                 +91 98765 43210
               </div>
@@ -41,20 +88,16 @@ const RescueRequest = () => {
               </h3>
               <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
                 <li className="flex items-start gap-2">
-                  <span className="text-ngo-green">✓</span> Kripya exact
-                  location aur landmark batayein.
+                  <span className="text-ngo-green">✓</span> Kripya exact location aur landmark batayein.
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-ngo-green">✓</span> Agar possible ho,
-                  toh team aane tak us insaan ke paas hi rahein.
+                  <span className="text-ngo-green">✓</span> Agar possible ho, toh team aane tak us insaan ke paas hi rahein.
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-ngo-green">✓</span> Dur se ek photo
-                  zaroor kheenchiye aur upload karein.
+                  <span className="text-ngo-green">✓</span> Dur se ek photo zaroor kheenchiye aur upload karein.
                 </li>
                 <li className="flex items-start gap-2 text-red-500 font-semibold">
-                  <span>⚠️</span> Fake requests na dalein, ye kisi ki jaan ka
-                  sawal ho sakta hai.
+                  <span>⚠️</span> Fake requests na dalein, ye kisi ki jaan ka sawal ho sakta hai.
                 </li>
               </ul>
             </div>
@@ -65,30 +108,32 @@ const RescueRequest = () => {
               Rescue Details Form
             </h2>
 
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                  Exact Location / Landmark{" "}
-                  <span className="text-ngo-red">*</span>
+                  Exact Location / Landmark <span className="text-ngo-red">*</span>
                 </label>
                 <input
                   required
                   type="text"
                   className="w-full p-4 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-ngo-red focus:border-ngo-red outline-none transition-colors"
                   placeholder="E.g., Outside Kalyan Station Platform 1 ticket counter"
+                  value={formData.location}
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                  Description of the Person's Condition{" "}
-                  <span className="text-ngo-red">*</span>
+                  Description of the Person's Condition <span className="text-ngo-red">*</span>
                 </label>
                 <textarea
                   required
                   rows="3"
                   className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-ngo-green transition-colors resize-none"
                   placeholder="Kapde kaise pehne hain? Chot lagi hai kya? Age kitni lag rahi hai?"
+                  value={formData.condition}
+                  onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                 ></textarea>
               </div>
 
@@ -98,8 +143,10 @@ const RescueRequest = () => {
                 </label>
                 <input
                   type="file"
+                  id="photo-upload"
                   accept="image/*"
                   className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 dark:file:bg-gray-600 file:text-ngo-red dark:file:text-red-400 hover:file:bg-red-100 transition-colors"
+                  onChange={(e) => setFormData({ ...formData, photo: e.target.files[0] })}
                 />
               </div>
 
@@ -112,6 +159,8 @@ const RescueRequest = () => {
                     type="text"
                     className="w-full p-4 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-ngo-red focus:border-ngo-red outline-none transition-colors"
                     placeholder="Enter your name"
+                    value={formData.reporterName}
+                    onChange={(e) => setFormData({ ...formData, reporterName: e.target.value })}
                   />
                 </div>
                 <div>
@@ -123,15 +172,18 @@ const RescueRequest = () => {
                     type="tel"
                     className="w-full p-4 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-ngo-red focus:border-ngo-red outline-none transition-colors"
                     placeholder="So we can contact you"
+                    value={formData.reporterPhone}
+                    onChange={(e) => setFormData({ ...formData, reporterPhone: e.target.value })}
                   />
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-ngo-red text-white font-bold text-lg py-4 rounded-lg hover:bg-red-700 transition-colors duration-300 shadow-lg mt-4 flex justify-center items-center gap-2"
+                disabled={loading}
+                className="w-full bg-ngo-red text-white font-bold text-lg py-4 rounded-lg hover:bg-red-700 transition-colors duration-300 shadow-lg mt-4 flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <span>🚨</span> Send Rescue Alert
+                <span>🚨</span> {loading ? "Sending..." : "Send Rescue Alert"}
               </button>
             </form>
           </div>
