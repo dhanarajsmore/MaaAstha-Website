@@ -12,27 +12,35 @@ const getRescueRequests = async (req, res) => {
 const addRescueRequest = async (req, res) => {
   try {
     const { location, condition, reporterName, reporterPhone } = req.body;
-
     if (!location || !condition || !reporterPhone) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Missing fields" });
+      return res.status(400).json({ success: false, message: "Missing fields" });
     }
-
     const photoUrl = req.file ? `/uploads/${req.file.filename}` : "";
-
     const request = await RescueRequest.create({
-      location,
-      condition,
-      reporterName,
-      reporterPhone,
-      photoUrl,
+      location, condition, reporterName, reporterPhone, photoUrl,
     });
-
     res.status(201).json({ success: true, data: request });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
-module.exports = { getRescueRequests, addRescueRequest };
+const updateRescueStatus = async (req, res) => {
+  try {
+    const updated = await RescueRequest.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+    res.status(200).json({ success: true, data: updated });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Update failed" });
+  }
+};
+
+const deleteRescueRequest = async (req, res) => {
+  try {
+    await RescueRequest.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: true, message: "Deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Delete failed" });
+  }
+};
+
+module.exports = { getRescueRequests, addRescueRequest, updateRescueStatus, deleteRescueRequest };

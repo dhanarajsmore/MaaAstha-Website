@@ -1,6 +1,5 @@
 const Person = require("../models/Person");
 
-// Add a new person
 const addPerson = async (req, res) => {
   try {
     const {
@@ -8,12 +7,9 @@ const addPerson = async (req, res) => {
       age,
       gender,
       address,
-      mobileNo,
-      idDocument,
       arrivalDateTime,
       broughtBy,
       reason,
-      condition,
     } = req.body;
 
     if (
@@ -31,19 +27,14 @@ const addPerson = async (req, res) => {
       });
     }
 
-    const newPerson = new Person({
-      fullName,
-      age,
-      gender,
-      address,
-      mobileNo,
-      idDocument,
-      arrivalDateTime,
-      broughtBy,
-      reason,
-      condition,
-    });
+    const personData = { ...req.body };
 
+    if (req.file) {
+      personData.imageUrl = `/uploads/${req.file.filename}`;
+      personData.image = `/uploads/${req.file.filename}`;
+    }
+
+    const newPerson = new Person(personData);
     const savedPerson = await newPerson.save();
 
     res.status(201).json({
@@ -60,7 +51,6 @@ const addPerson = async (req, res) => {
   }
 };
 
-// Get all persons
 const getAllPersons = async (req, res) => {
   try {
     const persons = await Person.find().sort({ createdAt: -1 });
@@ -78,15 +68,12 @@ const getAllPersons = async (req, res) => {
   }
 };
 
-// @desc    Update person status (e.g., Sheltered -> Reunited)
-// @route   PATCH /api/persons/update/:id
 const updatePersonStatus = async (req, res) => {
   try {
-    const { status } = req.body;
     const updatedPerson = await Person.findByIdAndUpdate(
       req.params.id,
-      { status },
-      { new: true },
+      { $set: req.body },
+      { new: true }
     );
     res.status(200).json({ success: true, data: updatedPerson });
   } catch (error) {
@@ -94,8 +81,6 @@ const updatePersonStatus = async (req, res) => {
   }
 };
 
-// @desc    Delete a record
-// @route   DELETE /api/persons/delete/:id
 const deletePerson = async (req, res) => {
   try {
     await Person.findByIdAndDelete(req.params.id);
@@ -105,22 +90,14 @@ const deletePerson = async (req, res) => {
   }
 };
 
-// @desc    Get stats for Dashboard
-// @route   GET /api/persons/stats
 const getDashboardStats = async (req, res) => {
   try {
-    // 1. Total Sheltered count
     const totalSheltered = await Person.countDocuments({ status: "Sheltered" });
-
-    // 2. Reunited count
     const reunited = await Person.countDocuments({ status: "Reunited" });
-
-    // 3. Medical Emergency count
     const medicalNeeds = await Person.countDocuments({
       status: "Medical Emergency",
     });
 
-    // 4. Recently Added
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const recentlyAdded = await Person.countDocuments({

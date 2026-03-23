@@ -9,8 +9,9 @@ const DonationSchema = new mongoose.Schema(
     paymentMode: { type: String, default: "UPI", trim: true },
     referenceId: { type: String, default: "", trim: true },
     message: { type: String, default: "", trim: true },
+    status: { type: String, default: "Pending", trim: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Donation", DonationSchema);
