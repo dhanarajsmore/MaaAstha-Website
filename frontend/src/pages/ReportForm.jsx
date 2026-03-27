@@ -17,7 +17,8 @@ const ReportForm = () => {
   if (!person) {
     return (
       <div className="pt-24 flex justify-center text-gray-500 dark:text-gray-400 font-sans">
-        No person selected to report. Please select a profile from the Missing Persons page.
+        No person selected to report. Please select a profile from the Missing
+        Persons page.
       </div>
     );
   }
@@ -31,6 +32,7 @@ const ReportForm = () => {
     setLoading(true);
 
     try {
+      // 🔥 FIX: Yahan se bhi /add hata diya original route ke liye
       const res = await fetch("http://localhost:5000/api/reports", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -41,7 +43,9 @@ const ReportForm = () => {
       });
 
       if (res.ok) {
-        alert("Report submitted successfully! The NGO team will contact you shortly.");
+        alert(
+          "Report submitted successfully! The NGO team will contact you shortly.",
+        );
         navigate("/");
       } else {
         alert("Failed to submit report. Please check the details.");
@@ -61,7 +65,10 @@ const ReportForm = () => {
             Claim Missing Person
           </h2>
           <p className="text-gray-500 dark:text-gray-400">
-            Reporting for: <span className="font-bold text-ngo-green">{person.name || person.fullName}</span>
+            Reporting for:{" "}
+            <span className="font-bold text-ngo-green">
+              {person.name || person.fullName}
+            </span>
           </p>
         </div>
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ShieldCheck, UserRound, KeyRound, AlertCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // 🚀 IMPORT ADDED
 
 const AdminLogin = () => {
   const [credentials, setCredentials] = useState({
@@ -8,6 +9,8 @@ const AdminLogin = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate(); // 🚀 HOOK ADDED
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -28,13 +31,12 @@ const AdminLogin = () => {
       const data = await response.json();
 
       if (data.success) {
-        // Login Success! Token aur Role ko tijori (LocalStorage) mein daalo
         localStorage.setItem("adminToken", data.data.token);
         localStorage.setItem("adminRole", data.data.role);
         localStorage.setItem("adminName", data.data.username);
 
-        // Redirect to Dashboard (Apne dashboard ka route yahan adjust kar lena)
-        window.location.href = "/admin-dashboard";
+        // 🚀 THE FIX: IN-PLACE ROUTING WITHOUT RELOAD
+        navigate("/admin-dashboard");
       } else {
         setError(data.message || "Invalid credentials!");
       }
@@ -46,9 +48,9 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-4 font-sans transition-colors duration-300">
+    // 🚀 min-h-screen ko min-h-[80vh] kar diya taaki UI fit baithe
+    <div className="min-h-[80vh] flex items-center justify-center p-4 font-sans transition-colors duration-300">
       <div className="max-w-md w-full bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700">
-        {/* Header Section */}
         <div className="bg-[#1A2E24] p-8 text-center relative overflow-hidden">
           <div className="relative z-10 flex flex-col items-center">
             <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-sm mb-4 border border-white/20">
@@ -65,11 +67,9 @@ const AdminLogin = () => {
               Maa Astha Shelter Project
             </p>
           </div>
-          {/* Subtle background decoration */}
           <ShieldCheck className="absolute -bottom-10 -right-10 text-white/5 w-48 h-48 rotate-12" />
         </div>
 
-        {/* Form Section */}
         <div className="p-8">
           {error && (
             <div className="mb-6 p-3.5 bg-rose-50 dark:bg-rose-900/30 border border-rose-200 dark:border-rose-800/50 rounded-xl flex items-center gap-3 text-rose-600 dark:text-rose-400 text-sm font-semibold">

@@ -2,15 +2,15 @@ const MissingPerson = require("../models/MissingPerson");
 
 const addMissingPerson = async (req, res) => {
   try {
-    const { name, age, missingSince, location } = req.body;
-    
-    const count = await MissingPerson.countDocuments();
-    if (count >= 6) {
-      return res.status(400).json({ success: false, message: "Maximum 6 cases allowed." });
-    }
+    // 🔥 FIX: missingSince ke sath gender aur description bhi le rahe hain
+    const { name, age, missingSince, location, gender, description } = req.body;
+
+    // 🔥 FIX: 6 cases wali limit HATA di gayi hai (Unlimited Cases Now!)
 
     if (!name || !age || !missingSince || !location) {
-      return res.status(400).json({ success: false, message: "Missing required fields." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required fields." });
     }
 
     const imageUrl = req.file ? req.file.path : "";
@@ -20,6 +20,8 @@ const addMissingPerson = async (req, res) => {
       age,
       missingSince,
       location,
+      gender, // New UI field
+      description, // New UI field
       imageUrl,
     });
 
@@ -31,7 +33,8 @@ const addMissingPerson = async (req, res) => {
 
 const getMissingPersons = async (req, res) => {
   try {
-    const persons = await MissingPerson.find().sort({ createdAt: -1 }).limit(6);
+    // 🔥 FIX: .limit(6) hata diya
+    const persons = await MissingPerson.find().sort({ createdAt: -1 });
     res.status(200).json({ success: true, data: persons });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });

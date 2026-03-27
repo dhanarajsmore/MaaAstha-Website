@@ -32,7 +32,7 @@ const Donation = () => {
       const data = await response.json();
       if (data.success) {
         alert(
-          "Donation logged successfully! We will verify and update the status.",
+          "Donation logged successfully! We will verify and update the status."
         );
         setFormData({
           name: "",

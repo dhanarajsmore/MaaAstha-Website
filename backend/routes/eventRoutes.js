@@ -6,10 +6,12 @@ const {
   getEvents,
   deleteEvent,
 } = require("../controllers/eventController");
-const { protect, restrictTo } = require("../middleware/authMiddleware");
+
+const { protect } = require("../middleware/authMiddleware");
 
 router.get("/all", getEvents);
 router.post("/add", protect, upload.single("image"), addEvent);
-router.delete("/delete/:id", protect, restrictTo("superadmin"), deleteEvent);
+
+router.delete("/delete/:id", protect, deleteEvent);
 
 module.exports = router;

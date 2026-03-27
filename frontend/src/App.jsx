@@ -1,9 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
 import Home from "./pages/Home";
 import About from "./pages/About";
 import MissingPeople from "./pages/MissingPeople";
@@ -18,16 +16,13 @@ import Events from "./pages/Events";
 
 const AppContent = () => {
   const location = useLocation();
-
-  // 🚀 Sirf Dashboard pe Navbar/Footer hide hoga. Login pe ab dono dikhenge!
   const isAdminRoute = location.pathname === "/admin-dashboard";
 
   return (
     <>
       {!isAdminRoute && <Navbar />}
-
       <div
-        className={`${!isAdminRoute ? "pt-20" : ""} min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300`}
+        className={`${!isAdminRoute ? "pt-24" : ""} min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300`}
       >
         <main className="flex-grow">
           <Routes>
@@ -40,13 +35,10 @@ const AppContent = () => {
             <Route path="/volunteer" element={<Volunteer />} />
             <Route path="/report-missing" element={<ReportForm />} />
             <Route path="/events" element={<Events />} />
-
-            {/* 🚀 Wapas /admin kar diya, ab navbar ka button direct kaam karega */}
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
           </Routes>
         </main>
-
         {!isAdminRoute && <Footer />}
       </div>
     </>
