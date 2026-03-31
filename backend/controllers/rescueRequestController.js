@@ -1,4 +1,5 @@
 const RescueRequest = require("../models/RescueRequest");
+const { cloudinary } = require("../config/cloudinary");
 
 const getRescueRequests = async (req, res) => {
   try {
@@ -12,13 +13,23 @@ const getRescueRequests = async (req, res) => {
 const addRescueRequest = async (req, res) => {
   try {
     const { location, condition, reporterName, reporterPhone } = req.body;
+
     if (!location || !condition || !reporterPhone) {
-      return res.status(400).json({ success: false, message: "Missing fields" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing fields" });
     }
-    const photoUrl = req.file ? `/uploads/${req.file.filename}` : "";
+
+    const photoUrl = req.file ? req.file.path : "";
+
     const request = await RescueRequest.create({
-      location, condition, reporterName, reporterPhone, photoUrl,
+      location,
+      condition,
+      reporterName,
+      reporterPhone,
+      photoUrl,
     });
+
     res.status(201).json({ success: true, data: request });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error" });
@@ -27,7 +38,11 @@ const addRescueRequest = async (req, res) => {
 
 const updateRescueStatus = async (req, res) => {
   try {
-    const updated = await RescueRequest.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+    const updated = await RescueRequest.findByIdAndUpdate(
+      req.params.id,
+      { status: req.body.status },
+      { new: true },
+    );
     res.status(200).json({ success: true, data: updated });
   } catch (error) {
     res.status(500).json({ success: false, message: "Update failed" });
@@ -36,11 +51,36 @@ const updateRescueStatus = async (req, res) => {
 
 const deleteRescueRequest = async (req, res) => {
   try {
+    const request = await RescueRequest.findById(req.params.id);
+    if (!request) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Request not found" });
+    }
+
+    if (request.photoUrl && request.photoUrl.includes("cloudinary")) {
+      const urlParts = request.photoUrl.split("/");
+      const filename = urlParts[urlParts.length - 1];
+      const folder = urlParts[urlParts.length - 2];
+      const publicId = `${folder}/${filename.split(".")[0]}`;
+      await cloudinary.uploader.destroy(publicId);
+    }
+
     await RescueRequest.findByIdAndDelete(req.params.id);
-    res.status(200).json({ success: true, message: "Deleted" });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Deleted securely from Database & Cloud",
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: "Delete failed" });
   }
 };
 
-module.exports = { getRescueRequests, addRescueRequest, updateRescueStatus, deleteRescueRequest };
+module.exports = {
+  getRescueRequests,
+  addRescueRequest,
+  updateRescueStatus,
+  deleteRescueRequest,
+};

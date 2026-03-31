@@ -1,19 +1,41 @@
 const Person = require("../models/Person");
+const RescueRequest = require("../models/RescueRequest");
+const { cloudinary } = require("../config/cloudinary");
 
-// 1. Add Person logic
 const addPerson = async (req, res) => {
   try {
-    const { uid, fullName, age, gender, address, arrivalDateTime, broughtBy, reason } = req.body;
+    const {
+      uid,
+      fullName,
+      age,
+      gender,
+      address,
+      arrivalDateTime,
+      broughtBy,
+      reason,
+    } = req.body;
 
-    if (!fullName || !age || !gender || !address || !arrivalDateTime || !broughtBy || !reason) {
-      return res.status(400).json({ success: false, message: "Please fill all required fields!" });
+    if (
+      !fullName ||
+      !age ||
+      !gender ||
+      !address ||
+      !arrivalDateTime ||
+      !broughtBy ||
+      !reason
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Please fill all required fields!" });
     }
 
-    // Check for Duplicate UID if provided
     if (uid) {
       const existingPerson = await Person.findOne({ uid });
       if (existingPerson) {
-        return res.status(400).json({ success: false, message: "This Unique ID (UID) already exists!" });
+        return res.status(400).json({
+          success: false,
+          message: "This Unique ID (UID) already exists!",
+        });
       }
     }
 
@@ -25,14 +47,17 @@ const addPerson = async (req, res) => {
 
     const newPerson = new Person(personData);
     await newPerson.save();
-    res.status(201).json({ success: true, message: "Record saved successfully!", data: newPerson });
+    res.status(201).json({
+      success: true,
+      message: "Record saved successfully!",
+      data: newPerson,
+    });
   } catch (error) {
     console.error("Add Person Error:", error);
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
-// 2. Get All logic
 const getAllPersons = async (req, res) => {
   try {
     const persons = await Person.find().sort({ createdAt: -1 });
@@ -42,38 +67,79 @@ const getAllPersons = async (req, res) => {
   }
 };
 
-// 3. Update Status logic
 const updatePersonStatus = async (req, res) => {
   try {
-    const updatedPerson = await Person.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
+    const updatedPerson = await Person.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true },
+    );
     res.status(200).json({ success: true, data: updatedPerson });
   } catch (error) {
     res.status(500).json({ success: false, message: "Update failed" });
   }
 };
 
-// 4. Delete logic
 const deletePerson = async (req, res) => {
   try {
+    const person = await Person.findById(req.params.id);
+    if (!person) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Record not found" });
+    }
+
+    const imagePath = person.imageUrl || person.image;
+    if (imagePath && imagePath.includes("cloudinary")) {
+      const urlParts = imagePath.split("/");
+      const filename = urlParts[urlParts.length - 1];
+      const folder = urlParts[urlParts.length - 2];
+      const publicId = `${folder}/${filename.split(".")[0]}`;
+      await cloudinary.uploader.destroy(publicId);
+    }
+
     await Person.findByIdAndDelete(req.params.id);
-    res.status(200).json({ success: true, message: "Record deleted" });
+    res
+      .status(200)
+      .json({ success: true, message: "Record deleted from Cloud and DB" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Delete failed" });
   }
 };
 
-// 5. Dashboard Stats logic
 const getDashboardStats = async (req, res) => {
   try {
-    const totalSheltered = await Person.countDocuments({ status: "Sheltered" });
-    const reunited = await Person.countDocuments({ status: "Reunited" });
-    const escaped = await Person.countDocuments({ status: "Escaped" });
-    const dead = await Person.countDocuments({ status: "Dead" });
-    const selfExited = await Person.countDocuments({ status: "Self Exited" });
+    const [
+      totalSheltered,
+      reunited,
+      escaped,
+      dead,
+      selfExited,
+      newRescueRequests,
+      rescuedPeople,
+    ] = await Promise.all([
+      Person.countDocuments({ status: "Sheltered" }),
+      Person.countDocuments({ status: "Reunited" }),
+      Person.countDocuments({ status: "Escaped" }),
+      Person.countDocuments({ status: "Dead" }),
+      Person.countDocuments({ status: "Self Exited" }),
+      RescueRequest.countDocuments({
+        status: { $in: ["Pending", "In Progress", "New"] },
+      }),
+      RescueRequest.countDocuments({ status: "Rescued" }),
+    ]);
 
     res.status(200).json({
       success: true,
-      data: { totalSheltered, reunited, escaped, dead, selfExited },
+      data: {
+        totalSheltered,
+        reunited,
+        escaped,
+        dead,
+        selfExited,
+        newRescueRequests,
+        rescuedPeople,
+      },
     });
   } catch (error) {
     console.error("Error fetching stats:", error);

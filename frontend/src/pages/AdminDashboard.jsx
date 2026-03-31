@@ -12,6 +12,7 @@ import {
   UserSearch,
   Mail,
   LogOut,
+  FileText, 
 } from "lucide-react";
 import { CiLight, CiDark } from "react-icons/ci";
 
@@ -24,6 +25,7 @@ import RescueRequests from "../components/admin/RescueRequests";
 import ContactMessages from "../components/admin/ContactMessages";
 import MissingReports from "../components/admin/MissingReports";
 import ManageEvents from "../components/admin/ManageEvents";
+import ManageStories from "../components/admin/ManageStories";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -78,6 +80,7 @@ const AdminDashboard = () => {
       label: "Missing Claims",
       icon: <UserSearch size={20} />,
     },
+    { id: "stories", label: "Manage Stories", icon: <FileText size={20} /> }, // Added this
     { id: "contacts", label: "Inbox", icon: <Mail size={20} /> },
   ];
 
@@ -85,7 +88,7 @@ const AdminDashboard = () => {
     localStorage.removeItem("adminToken");
     localStorage.removeItem("adminRole");
     localStorage.removeItem("adminName");
-    navigate("/admin");
+    navigate("/");
   };
 
   const renderContent = () => {
@@ -106,6 +109,8 @@ const AdminDashboard = () => {
         return <RescueRequests />;
       case "missing-reports":
         return <MissingReports />;
+      case "stories": // Added this
+        return <ManageStories />;
       case "contacts":
         return <ContactMessages />;
       default:

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -14,15 +14,23 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ReportForm from "./pages/ReportForm";
 import Events from "./pages/Events";
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pathname]);
+  return null;
+};
+
 const AppContent = () => {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith("/admin-dashboard") || location.pathname === "/admin";
+  const isAdminRoute = location.pathname.startsWith("/admin-dashboard");
 
   return (
     <>
       {!isAdminRoute && <Navbar />}
       <div
-        className={`${!isAdminRoute ? "pt-24" : ""} min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300`}
+        className={`${!isAdminRoute ? "pt-24" : ""} min-h-screen flex flex-col font-sans bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors duration-300`}
       >
         <main className="flex-grow">
           <Routes>
@@ -48,6 +56,7 @@ const AppContent = () => {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AppContent />
     </BrowserRouter>
   );

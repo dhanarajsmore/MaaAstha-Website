@@ -10,8 +10,7 @@ const {
 } = require("../controllers/personController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 
-// Stats route hamesha /:id waale routes se upar rakho taaki conflict na ho
-router.get("/stats", protect, getDashboardStats);
+router.get("/stats", getDashboardStats);
 router.get("/all", protect, getAllPersons);
 router.post("/add", protect, upload.single("image"), addPerson);
 router.patch("/update/:id", protect, updatePersonStatus);

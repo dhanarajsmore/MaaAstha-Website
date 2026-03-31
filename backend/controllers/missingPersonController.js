@@ -1,11 +1,9 @@
 const MissingPerson = require("../models/MissingPerson");
+const { cloudinary } = require("../config/cloudinary");
 
 const addMissingPerson = async (req, res) => {
   try {
-    // 🔥 FIX: missingSince ke sath gender aur description bhi le rahe hain
     const { name, age, missingSince, location, gender, description } = req.body;
-
-    // 🔥 FIX: 6 cases wali limit HATA di gayi hai (Unlimited Cases Now!)
 
     if (!name || !age || !missingSince || !location) {
       return res
@@ -20,8 +18,8 @@ const addMissingPerson = async (req, res) => {
       age,
       missingSince,
       location,
-      gender, // New UI field
-      description, // New UI field
+      gender,
+      description,
       imageUrl,
     });
 
@@ -33,7 +31,6 @@ const addMissingPerson = async (req, res) => {
 
 const getMissingPersons = async (req, res) => {
   try {
-    // 🔥 FIX: .limit(6) hata diya
     const persons = await MissingPerson.find().sort({ createdAt: -1 });
     res.status(200).json({ success: true, data: persons });
   } catch (error) {
@@ -43,8 +40,28 @@ const getMissingPersons = async (req, res) => {
 
 const deleteMissingPerson = async (req, res) => {
   try {
+    const person = await MissingPerson.findById(req.params.id);
+    if (!person) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Record not found" });
+    }
+
+    if (person.imageUrl && person.imageUrl.includes("cloudinary")) {
+      const urlParts = person.imageUrl.split("/");
+      const filename = urlParts[urlParts.length - 1];
+      const folder = urlParts[urlParts.length - 2];
+      const publicId = `${folder}/${filename.split(".")[0]}`;
+      await cloudinary.uploader.destroy(publicId);
+    }
+
     await MissingPerson.findByIdAndDelete(req.params.id);
-    res.status(200).json({ success: true, message: "Deleted successfully" });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Deleted successfully from Cloud and DB",
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: "Delete failed" });
   }

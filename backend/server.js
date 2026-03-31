@@ -12,6 +12,7 @@ const rescueRequestRoutes = require("./routes/rescueRequestRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const missingPersonRoutes = require("./routes/missingPersonRoutes");
+const storyRoutes = require("./routes/storyRoutes");
 
 dotenv.config();
 connectDB();
@@ -35,6 +36,7 @@ app.use("/api/reports", reportRoutes);
 app.use("/api/missing-persons", missingPersonRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/stories", storyRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

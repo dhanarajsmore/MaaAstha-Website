@@ -95,50 +95,58 @@ const Volunteers = () => {
         </div>
       </div>
       
-      <div className="overflow-x-auto min-h-[300px]">
-        <table className="w-full text-left border-collapse min-w-[900px]">
+      <div className="overflow-x-auto min-h-[300px] px-2 pb-4 -mx-2">
+        <table className="w-full text-left border-separate border-spacing-y-4 min-w-[900px]">
           <thead>
-            <tr className="bg-slate-50/50 dark:bg-slate-800/30 text-slate-500 dark:text-slate-500 text-xs tracking-wider border-b dark:border-slate-800">
-              <th className="p-5 font-bold uppercase">Applicant Name</th>
-              <th className="p-5 font-bold uppercase">Profession</th>
-              <th className="p-5 font-bold uppercase hover:text-indigo-500 cursor-default">Phone</th>
-              <th className="p-5 font-bold uppercase">Submitted On</th>
-              <th className="p-5 font-bold uppercase text-center">Actions</th>
+            <tr className="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-bold">
+              <th className="px-5 py-2">Applicant Name</th>
+              <th className="px-5 py-2">Profession</th>
+              <th className="px-5 py-2">Phone</th>
+              <th className="px-5 py-2">Submitted On</th>
+              <th className="px-5 py-2 text-center w-56">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
-            {loading ? <tr><td colSpan="5" className="p-10 text-center text-slate-500">Loading applications...</td></tr> : filteredVolunteers.length === 0 ? (
-              <tr><td colSpan="5" className="p-10 text-center text-slate-500">No {viewMode === "active" ? "pending" : "verified"} applications found.</td></tr>
+          <tbody>
+            {loading ? <tr><td colSpan="5" className="p-10 text-center text-slate-500 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700">Loading applications...</td></tr> : filteredVolunteers.length === 0 ? (
+              <tr><td colSpan="5" className="p-10 text-center text-slate-500 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700">No {viewMode === "active" ? "pending" : "verified"} applications found.</td></tr>
             ) : (
               filteredVolunteers.map((v) => (
-                <tr key={v._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
-                  <td className="p-5">
+                <tr key={v._id} className="group hover:-translate-y-0.5 transition-transform duration-300">
+                  <td className="p-5 bg-white dark:bg-slate-800/90 border-y border-slate-200 dark:border-slate-700/50 first:border-l last:border-r first:rounded-l-2xl last:rounded-r-2xl shadow-sm group-hover:shadow-md group-hover:border-indigo-200 dark:group-hover:border-indigo-500/50 transition-all align-top">
                     <div className="font-semibold text-slate-900 dark:text-white text-base">{v.name}</div>
                     <div className="text-xs text-slate-500 mt-1">{v.gender}, {v.age} yrs</div>
                   </td>
-                  <td className="p-5 text-slate-700 dark:text-slate-300 font-medium">{v.profession || "N/A"}</td>
-                  <td className="p-5">
+                  <td className="p-5 bg-white dark:bg-slate-800/90 border-y border-slate-200 dark:border-slate-700/50 first:border-l last:border-r first:rounded-l-2xl last:rounded-r-2xl shadow-sm group-hover:shadow-md group-hover:border-indigo-200 dark:group-hover:border-indigo-500/50 transition-all text-slate-700 dark:text-slate-300 font-medium align-top">
+                    {v.profession || "N/A"}
+                  </td>
+                  <td className="p-5 bg-white dark:bg-slate-800/90 border-y border-slate-200 dark:border-slate-700/50 first:border-l last:border-r first:rounded-l-2xl last:rounded-r-2xl shadow-sm group-hover:shadow-md group-hover:border-indigo-200 dark:group-hover:border-indigo-500/50 transition-all align-top">
                     <a href={`tel:${v.phone}`} className="text-indigo-600 dark:text-indigo-400 font-mono hover:underline">{v.phone}</a>
                   </td>
-                  <td className="p-5 text-slate-500 dark:text-slate-400 text-sm">{new Date(v.createdAt).toLocaleDateString("en-IN", { day: '2-digit', month: 'short', year: 'numeric'})}</td>
-                  <td className="p-5 flex justify-center items-center gap-2.5">
-                    <button onClick={() => setSelectedVol(v)} className="flex items-center gap-2 text-xs font-bold uppercase px-4 py-2 rounded-xl transition-all shadow-sm bg-blue-50 text-blue-700 border border-blue-100 hover:bg-blue-600 hover:text-white dark:bg-blue-950 dark:text-blue-300 dark:border-blue-900 dark:hover:bg-blue-600 dark:hover:text-white dark:hover:border-transparent">
-                      <Eye size={15} strokeWidth={2.5}/> Details
-                    </button>
-                    {v.status !== "Verified" ? (
-                      <button onClick={() => handleVerify(v._id)} className="flex items-center gap-2 text-xs font-bold uppercase px-4 py-2 rounded-xl transition-all shadow-sm bg-emerald-50 text-emerald-700 border border-emerald-100 hover:bg-emerald-600 hover:text-white dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-900 dark:hover:bg-emerald-600 dark:hover:text-white dark:hover:border-transparent">
-                        <CheckCircle size={15} strokeWidth={2.5} /> Verify
+                  <td className="p-5 bg-white dark:bg-slate-800/90 border-y border-slate-200 dark:border-slate-700/50 first:border-l last:border-r first:rounded-l-2xl last:rounded-r-2xl shadow-sm group-hover:shadow-md group-hover:border-indigo-200 dark:group-hover:border-indigo-500/50 transition-all text-slate-500 dark:text-slate-400 text-sm align-top font-medium">
+                    {new Date(v.createdAt).toLocaleDateString("en-IN", { day: '2-digit', month: 'short', year: 'numeric'})}
+                  </td>
+                  <td className="p-5 bg-white dark:bg-slate-800/90 border-y border-slate-200 dark:border-slate-700/50 first:border-l last:border-r first:rounded-l-2xl last:rounded-r-2xl shadow-sm group-hover:shadow-md group-hover:border-indigo-200 dark:group-hover:border-indigo-500/50 transition-all align-top">
+                    <div className="flex flex-col justify-center items-center gap-2">
+                      <button onClick={() => setSelectedVol(v)} className="w-full flex items-center justify-center gap-2 text-xs font-bold uppercase px-3 py-2 rounded-lg transition-all shadow-sm bg-blue-50 text-blue-700 border border-blue-100 hover:bg-blue-600 hover:text-white dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800/50 dark:hover:bg-blue-600 dark:hover:text-white transition-colors">
+                        <Eye size={15} strokeWidth={2.5}/> Details
                       </button>
-                    ) : (
-                      <span className="flex items-center gap-1.5 text-xs font-bold uppercase px-4 py-2 rounded-xl border bg-emerald-50/50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">
-                        <CheckCircle size={14}/> Verified
-                      </span>
-                    )}
-                    {adminRole === "superadmin" && (
-                      <button onClick={() => handleDelete(v._id)} className="flex items-center gap-2 text-xs font-bold uppercase px-3 py-2 rounded-xl transition-all shadow-sm bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-600 hover:text-white dark:bg-rose-950 dark:text-rose-400 dark:border-rose-900 dark:hover:bg-rose-600 dark:hover:text-white dark:hover:border-transparent">
-                        <Trash2 size={15} strokeWidth={2.5} />
-                      </button>
-                    )}
+                      
+                      {v.status !== "Verified" ? (
+                        <button onClick={() => handleVerify(v._id)} className="w-full flex items-center justify-center gap-2 text-xs font-bold uppercase px-3 py-2 rounded-lg transition-all shadow-sm bg-emerald-50 text-emerald-700 border border-emerald-100 hover:bg-emerald-600 hover:text-white dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-800/50 dark:hover:bg-emerald-600 dark:hover:text-white transition-colors">
+                          <CheckCircle size={15} strokeWidth={2.5} /> Verify
+                        </button>
+                      ) : (
+                        <span className="w-full flex items-center justify-center gap-1.5 text-xs font-bold uppercase px-3 py-2 rounded-lg border bg-emerald-50/50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">
+                          <CheckCircle size={14}/> Verified
+                        </span>
+                      )}
+                      
+                      {adminRole === "superadmin" && (
+                        <button onClick={() => handleDelete(v._id)} className="w-full flex items-center justify-center gap-2 text-xs font-bold uppercase px-3 py-2 rounded-lg transition-all shadow-sm bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-600 hover:text-white dark:bg-rose-900/40 dark:text-rose-400 dark:border-rose-800/50 dark:hover:bg-rose-600 dark:hover:text-white transition-colors opacity-0 group-hover:opacity-100">
+                          <Trash2 size={15} strokeWidth={2.5} /> Delete
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))

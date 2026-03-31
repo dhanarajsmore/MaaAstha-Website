@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 
 const StatCard = ({ title, value, subtitle, colorClass }) => (
-  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 transition-colors duration-300 text-center">
-    <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium font-sans">
+  <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-6 border border-slate-100 dark:border-slate-700 transition-colors duration-300 text-center hover:-translate-y-1 hover:shadow-md">
+    <h3 className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider font-sans">
       {title}
     </h3>
-    <p className={`text-3xl font-bold mt-2 font-heading ${colorClass}`}>
+    <p className={`text-4xl font-black mt-3 font-heading ${colorClass}`}>
       {value}
     </p>
-    <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 font-sans italic">
+    <p className="text-xs text-slate-400 dark:text-slate-500 mt-2 font-sans font-medium">
       {subtitle}
     </p>
   </div>
@@ -21,6 +21,8 @@ const DashboardOverview = () => {
     escaped: 0,
     dead: 0,
     selfExited: 0,
+    newRescueRequests: 0,
+    rescuedPeople: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,9 +30,12 @@ const DashboardOverview = () => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("adminToken");
-        const response = await fetch("http://localhost:5000/api/persons/stats", {
-          headers: { "Authorization": `Bearer ${token}` }
-        });
+        const response = await fetch(
+          "http://localhost:5000/api/persons/stats",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         const data = await response.json();
         if (data.success) {
           setStats(data.data);
@@ -45,7 +50,7 @@ const DashboardOverview = () => {
   }, []);
 
   return (
-    <div className="space-y-6 transition-colors duration-300">
+    <div className="space-y-8 transition-colors duration-300">
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white font-heading">
           Shelter Overview
@@ -86,6 +91,26 @@ const DashboardOverview = () => {
           subtitle="Passed away"
           colorClass="text-red-600 dark:text-red-500"
         />
+      </div>
+
+      <div className="pt-6 border-t border-slate-200 dark:border-slate-800">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white font-heading mb-4">
+          Rescue Operations
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+          <StatCard
+            title="Active Alerts"
+            value={isLoading ? "..." : stats.newRescueRequests || 0}
+            subtitle="Pending rescue requests"
+            colorClass="text-rose-600 dark:text-rose-400"
+          />
+          <StatCard
+            title="Total Rescued"
+            value={isLoading ? "..." : stats.rescuedPeople || 0}
+            subtitle="Lives saved to date"
+            colorClass="text-emerald-600 dark:text-emerald-400"
+          />
+        </div>
       </div>
     </div>
   );

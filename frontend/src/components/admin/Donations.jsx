@@ -17,11 +17,9 @@ const Donations = () => {
   const loadDonations = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("adminToken"); 
+      const token = localStorage.getItem("adminToken");
       const res = await fetch("http://localhost:5000/api/donations/all", {
-        headers: {
-          "Authorization": `Bearer ${token}`, 
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
       if (json.success) setDonations(json.data);
@@ -39,14 +37,14 @@ const Donations = () => {
   const handleUpdateStatus = async (id, newStatus) => {
     if (!window.confirm(`Mark this transaction as ${newStatus}?`)) return;
     try {
-      const token = localStorage.getItem("adminToken"); 
+      const token = localStorage.getItem("adminToken");
       const res = await fetch(
         `http://localhost:5000/api/donations/update/${id}`,
         {
           method: "PATCH",
-          headers: { 
+          headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ status: newStatus }),
         },
@@ -60,22 +58,20 @@ const Donations = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this record permanently?")) return;
     try {
-      const token = localStorage.getItem("adminToken"); 
+      const token = localStorage.getItem("adminToken");
       const res = await fetch(
         `http://localhost:5000/api/donations/delete/${id}`,
-        { 
+        {
           method: "DELETE",
-          headers: {
-            "Authorization": `Bearer ${token}`, 
-          },
+          headers: { Authorization: `Bearer ${token}` },
         },
       );
-      
+
       const data = await res.json();
       if (res.ok) {
         loadDonations();
       } else {
-        alert(data.message || "Delete failed!"); 
+        alert(data.message || "Delete failed!");
       }
     } catch (e) {
       alert("Delete failed!");
@@ -166,23 +162,25 @@ const Donations = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto min-h-[300px]">
-          <table className="w-full text-left border-collapse min-w-[900px]">
+        <div className="overflow-x-auto min-h-[300px] px-2 pb-4 -mx-2">
+          <table className="w-full text-left border-separate border-spacing-y-4 min-w-[900px]">
             <thead>
-              <tr className="bg-slate-50/50 dark:bg-slate-800/30 text-slate-400 dark:text-slate-500 text-[11px] font-bold uppercase tracking-widest border-b dark:border-slate-800">
-                <th className="p-5">Donor Details</th>
-                <th className="p-5">Amount</th>
-                <th className="p-5">Transaction Info</th>
-                <th className="p-5">Status</th>
-                <th className="p-5 text-center">Actions</th>
+              <tr className="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-bold">
+                <th className="px-5 py-2">Donor Details</th>
+                <th className="px-5 py-2">Amount</th>
+                <th className="px-5 py-2">Transaction Info</th>
+                <th className="px-5 py-2">Status</th>
+                {adminRole === "superadmin" && (
+                  <th className="px-5 py-2 text-center w-40">Actions</th>
+                )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
+            <tbody>
               {loading ? (
                 <tr>
                   <td
-                    colSpan="5"
-                    className="p-10 text-center text-slate-400 italic"
+                    colSpan={adminRole === "superadmin" ? 5 : 4}
+                    className="p-10 text-center text-slate-500 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700"
                   >
                     Loading records...
                   </td>
@@ -190,8 +188,8 @@ const Donations = () => {
               ) : filteredDonations.length === 0 ? (
                 <tr>
                   <td
-                    colSpan="5"
-                    className="p-10 text-center text-slate-400 italic"
+                    colSpan={adminRole === "superadmin" ? 5 : 4}
+                    className="p-10 text-center text-slate-500 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700"
                   >
                     No donations found.
                   </td>
@@ -200,9 +198,9 @@ const Donations = () => {
                 filteredDonations.map((d) => (
                   <tr
                     key={d._id}
-                    className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors"
+                    className="group hover:-translate-y-0.5 transition-transform duration-300"
                   >
-                    <td className="p-5">
+                    <td className="p-5 bg-white dark:bg-slate-800/90 border-y border-slate-200 dark:border-slate-700/50 first:border-l last:border-r first:rounded-l-2xl last:rounded-r-2xl shadow-sm group-hover:shadow-md group-hover:border-indigo-200 dark:group-hover:border-indigo-500/50 transition-all align-top">
                       <div className="font-bold text-slate-900 dark:text-white text-sm">
                         {d.name}
                       </div>
@@ -210,10 +208,10 @@ const Donations = () => {
                         {d.phone}
                       </div>
                     </td>
-                    <td className="p-5 font-extrabold text-emerald-600 dark:text-emerald-400 text-base">
+                    <td className="p-5 bg-white dark:bg-slate-800/90 border-y border-slate-200 dark:border-slate-700/50 first:border-l last:border-r first:rounded-l-2xl last:rounded-r-2xl shadow-sm group-hover:shadow-md group-hover:border-indigo-200 dark:group-hover:border-indigo-500/50 transition-all align-top font-extrabold text-emerald-600 dark:text-emerald-400 text-base">
                       ₹{(Number(d.amount) || 0).toLocaleString("en-IN")}
                     </td>
-                    <td className="p-5">
+                    <td className="p-5 bg-white dark:bg-slate-800/90 border-y border-slate-200 dark:border-slate-700/50 first:border-l last:border-r first:rounded-l-2xl last:rounded-r-2xl shadow-sm group-hover:shadow-md group-hover:border-indigo-200 dark:group-hover:border-indigo-500/50 transition-all align-top">
                       <div className="font-mono text-slate-800 dark:text-slate-300 text-sm tracking-wide bg-slate-100 dark:bg-slate-800 inline-block px-2 py-1 rounded">
                         {d.transactionId}
                       </div>
@@ -224,42 +222,47 @@ const Donations = () => {
                         {new Date(d.createdAt).toLocaleString("en-IN")}
                       </div>
                     </td>
-                    <td className="p-5">
+                    <td className="p-5 bg-white dark:bg-slate-800/90 border-y border-slate-200 dark:border-slate-700/50 first:border-l last:border-r first:rounded-l-2xl last:rounded-r-2xl shadow-sm group-hover:shadow-md group-hover:border-indigo-200 dark:group-hover:border-indigo-500/50 transition-all align-top">
                       <span
                         className={`text-xs font-bold uppercase tracking-wide px-3 py-1.5 rounded-md border ${d.status === "Verified" ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20" : d.status === "Invalid" ? "bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20" : "bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20"}`}
                       >
                         {d.status}
                       </span>
                     </td>
-                    <td className="p-5 flex justify-center items-center gap-2">
-                      {viewMode === "pending" ? (
-                        <>
-                          <button
-                            onClick={() =>
-                              handleUpdateStatus(d._id, "Verified")
-                            }
-                            className="flex items-center gap-1.5 text-xs font-bold uppercase px-3 py-2 rounded-lg transition-all shadow-sm bg-emerald-50 text-emerald-700 border border-emerald-100 hover:bg-emerald-600 hover:text-white dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-900 dark:hover:bg-emerald-600 dark:hover:text-white dark:hover:border-transparent"
-                          >
-                            <CheckCircle size={15} strokeWidth={2.5} /> Verify
-                          </button>
-                          <button
-                            onClick={() => handleUpdateStatus(d._id, "Invalid")}
-                            className="flex items-center gap-1.5 text-xs font-bold uppercase px-3 py-2 rounded-lg transition-all shadow-sm bg-rose-50 text-rose-700 border border-rose-100 hover:bg-rose-600 hover:text-white dark:bg-rose-950 dark:text-rose-400 dark:border-rose-900 dark:hover:bg-rose-600 dark:hover:text-white dark:hover:border-transparent"
-                          >
-                            <Ban size={15} strokeWidth={2.5} /> Invalid
-                          </button>
-                        </>
-                      ) : (
-                        adminRole === "superadmin" && (
-                          <button
-                            onClick={() => handleDelete(d._id)}
-                            className="flex items-center gap-1.5 text-xs font-bold uppercase px-3 py-2 rounded-lg transition-all shadow-sm bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-600 hover:text-white dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-600 dark:hover:text-white dark:hover:border-transparent"
-                          >
-                            <Trash2 size={15} strokeWidth={2.5} /> Delete
-                          </button>
-                        )
-                      )}
-                    </td>
+                    {adminRole === "superadmin" && (
+                      <td className="p-5 bg-white dark:bg-slate-800/90 border-y border-slate-200 dark:border-slate-700/50 first:border-l last:border-r first:rounded-l-2xl last:rounded-r-2xl shadow-sm group-hover:shadow-md group-hover:border-indigo-200 dark:group-hover:border-indigo-500/50 transition-all align-top">
+                        <div className="flex flex-col gap-2">
+                          {viewMode === "pending" ? (
+                            <>
+                              <button
+                                onClick={() =>
+                                  handleUpdateStatus(d._id, "Verified")
+                                }
+                                className="flex items-center justify-center gap-1.5 text-xs font-bold uppercase px-3 py-2 rounded-lg transition-all shadow-sm bg-emerald-50 text-emerald-700 border border-emerald-100 hover:bg-emerald-600 hover:text-white dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-900 dark:hover:bg-emerald-600 dark:hover:text-white transition-colors"
+                              >
+                                <CheckCircle size={15} strokeWidth={2.5} />{" "}
+                                Verify
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleUpdateStatus(d._id, "Invalid")
+                                }
+                                className="flex items-center justify-center gap-1.5 text-xs font-bold uppercase px-3 py-2 rounded-lg transition-all shadow-sm bg-rose-50 text-rose-700 border border-rose-100 hover:bg-rose-600 hover:text-white dark:bg-rose-950 dark:text-rose-400 dark:border-rose-900 dark:hover:bg-rose-600 dark:hover:text-white transition-colors"
+                              >
+                                <Ban size={15} strokeWidth={2.5} /> Invalid
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              onClick={() => handleDelete(d._id)}
+                              className="flex items-center justify-center gap-1.5 text-xs font-bold uppercase px-3 py-2 rounded-lg transition-all shadow-sm bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-600 hover:text-white dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700 dark:hover:bg-slate-600 dark:hover:text-white transition-colors"
+                            >
+                              <Trash2 size={15} strokeWidth={2.5} /> Delete
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               )}

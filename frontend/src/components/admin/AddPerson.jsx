@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const AddPerson = () => {
   const initialForm = {
-    uid: "", // Naya field for Unique ID
+    uid: "", 
     fullName: "",
     age: "",
     gender: "Select",
@@ -70,7 +70,6 @@ const AddPerson = () => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5 bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
           
-          {/* Naya Unique ID Field */}
           <div>
             <label className="block text-sm font-bold text-indigo-600 dark:text-indigo-400 mb-1">
               Unique ID (UID)
