@@ -132,7 +132,7 @@ const About = () => {
             Donate Now
           </Link>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

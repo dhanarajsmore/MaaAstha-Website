@@ -16,7 +16,7 @@ import Events from "./pages/Events";
 
 const AppContent = () => {
   const location = useLocation();
-  const isAdminRoute = location.pathname === "/admin-dashboard";
+  const isAdminRoute = location.pathname.startsWith("/admin-dashboard") || location.pathname === "/admin";
 
   return (
     <>
