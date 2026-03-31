@@ -1,10 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { getDonations, addDonation, updateDonationStatus, deleteDonation } = require("../controllers/donationController");
+const {
+  addDonation,
+  getDonations,
+  updateDonationStatus,
+  deleteDonation,
+} = require("../controllers/donationController");
+const { protect, restrictTo } = require("../middleware/authMiddleware");
 
-router.get("/all", getDonations);
 router.post("/add", addDonation);
-router.patch("/update/:id", updateDonationStatus);
-router.delete("/delete/:id", deleteDonation);
+router.get("/all", protect, getDonations);
+router.patch("/update/:id", protect, updateDonationStatus);
+router.delete("/delete/:id", protect, restrictTo("superadmin"), deleteDonation);
 
 module.exports = router;

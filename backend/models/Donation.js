@@ -1,17 +1,15 @@
 const mongoose = require("mongoose");
 
-const DonationSchema = new mongoose.Schema(
+const donationSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true },
-    phone: { type: String, default: "", trim: true },
-    email: { type: String, default: "", trim: true, lowercase: true },
-    amount: { type: Number, required: true, min: 1 },
-    paymentMode: { type: String, default: "UPI", trim: true },
-    referenceId: { type: String, default: "", trim: true },
-    message: { type: String, default: "", trim: true },
-    status: { type: String, default: "Pending", trim: true },
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    amount: { type: Number, required: true },
+    modeOfPayment: { type: String, required: true },
+    transactionId: { type: String, required: true, unique: true },
+    status: { type: String, default: "Pending" },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-module.exports = mongoose.model("Donation", DonationSchema);
+module.exports = mongoose.model("Donation", donationSchema);

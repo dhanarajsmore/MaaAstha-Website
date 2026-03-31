@@ -1,10 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const { upload } = require("../config/cloudinary");
-const { addEvent, getEvents, deleteEvent } = require("../controllers/eventController");
+const {
+  addEvent,
+  getEvents,
+  deleteEvent,
+} = require("../controllers/eventController");
 
-router.post("/add", upload.single("image"), addEvent);
+const { protect } = require("../middleware/authMiddleware");
+
 router.get("/all", getEvents);
-router.delete("/delete/:id", deleteEvent);
+router.post("/add", protect, upload.single("image"), addEvent);
+
+router.delete("/delete/:id", protect, deleteEvent);
 
 module.exports = router;

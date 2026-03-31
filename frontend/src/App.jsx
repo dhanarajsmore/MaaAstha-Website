@@ -8,7 +8,7 @@ import MissingPeople from "./pages/MissingPeople";
 import RescueRequest from "./pages/RescueRequest";
 import Contact from "./pages/Contact";
 import Donation from "./pages/Donation";
-import Login from "./pages/Login";
+import AdminLogin from "./pages/AdminLogin";
 import Volunteer from "./pages/Volunteer";
 import AdminDashboard from "./pages/AdminDashboard";
 import ReportForm from "./pages/ReportForm";
@@ -21,7 +21,9 @@ const AppContent = () => {
   return (
     <>
       {!isAdminRoute && <Navbar />}
-      <div className={`${!isAdminRoute ? "pt-24" : ""} min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300`}>
+      <div
+        className={`${!isAdminRoute ? "pt-24" : ""} min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300`}
+      >
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -30,11 +32,11 @@ const AppContent = () => {
             <Route path="/rescue" element={<RescueRequest />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/donate" element={<Donation />} />
-            <Route path="/admin" element={<Login />} />
             <Route path="/volunteer" element={<Volunteer />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/report-missing" element={<ReportForm />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
           </Routes>
         </main>
         {!isAdminRoute && <Footer />}

@@ -19,6 +19,7 @@ const Contact = () => {
     setLoading(true);
 
     try {
+      // 🔥 FIX: /add hata diya, wapas original route pe set kar diya
       const res = await fetch("http://localhost:5000/api/contacts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -27,7 +28,13 @@ const Contact = () => {
 
       if (res.ok) {
         alert("Message sent successfully! Our team will contact you soon.");
-        setFormData({ name: "", phone: "", email: "", subject: "General Inquiry", message: "" });
+        setFormData({
+          name: "",
+          phone: "",
+          email: "",
+          subject: "General Inquiry",
+          message: "",
+        });
       } else {
         alert("Failed to send message.");
       }
@@ -46,22 +53,29 @@ const Contact = () => {
             Get In Touch
           </h1>
           <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg transition-colors duration-300">
-            Koi sawal hai? Ya kisi ki madad karna chahte hain? Humse sampark karein, humari team jald hi aapse baat karegi.
+            Koi sawal hai? Ya kisi ki madad karna chahte hain? Humse sampark
+            karein, humari team jald hi aapse baat karegi.
           </p>
         </div>
 
         <div className="flex flex-col md:flex-row gap-10">
           <div className="md:w-1/3 bg-gray-900 dark:bg-black text-white rounded-2xl shadow-xl p-8 flex flex-col justify-between">
             <div>
-              <h2 className="text-2xl font-heading font-bold mb-8">Contact Information</h2>
+              <h2 className="text-2xl font-heading font-bold mb-8">
+                Contact Information
+              </h2>
               <div className="space-y-6">
                 <div className="flex items-start">
                   <span className="text-2xl mr-4">📍</span>
                   <div>
-                    <h3 className="font-semibold text-gray-400 uppercase tracking-wider text-sm mb-1">Our Location</h3>
+                    <h3 className="font-semibold text-gray-400 uppercase tracking-wider text-sm mb-1">
+                      Our Location
+                    </h3>
                     <p className="leading-relaxed">
-                      Maa Astha Shelter Home,<br />
-                      Near Station Road, Kalyan West,<br />
+                      Maa Astha Shelter Home,
+                      <br />
+                      Near Station Road, Kalyan West,
+                      <br />
                       Maharashtra, India - 421301
                     </p>
                   </div>
@@ -69,15 +83,21 @@ const Contact = () => {
                 <div className="flex items-start">
                   <span className="text-2xl mr-4">📞</span>
                   <div>
-                    <h3 className="font-semibold text-gray-400 uppercase tracking-wider text-sm mb-1">Phone Number</h3>
+                    <h3 className="font-semibold text-gray-400 uppercase tracking-wider text-sm mb-1">
+                      Phone Number
+                    </h3>
                     <p className="font-mono text-lg">+91 98765 43210</p>
-                    <p className="text-sm text-gray-500 mt-1">Available 24/7 for emergencies</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Available 24/7 for emergencies
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <span className="text-2xl mr-4">✉️</span>
                   <div>
-                    <h3 className="font-semibold text-gray-400 uppercase tracking-wider text-sm mb-1">Email Address</h3>
+                    <h3 className="font-semibold text-gray-400 uppercase tracking-wider text-sm mb-1">
+                      Email Address
+                    </h3>
                     <p className="font-mono">contact@maaastha.org</p>
                   </div>
                 </div>
@@ -92,7 +112,9 @@ const Contact = () => {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     name="name"
@@ -104,7 +126,9 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Phone Number
+                  </label>
                   <input
                     type="tel"
                     name="phone"
@@ -117,7 +141,9 @@ const Contact = () => {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Email Address
+                </label>
                 <input
                   type="email"
                   name="email"
@@ -128,7 +154,9 @@ const Contact = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subject</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Subject
+                </label>
                 <select
                   name="subject"
                   value={formData.subject}
@@ -140,7 +168,9 @@ const Contact = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Message</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Your Message
+                </label>
                 <textarea
                   name="message"
                   required

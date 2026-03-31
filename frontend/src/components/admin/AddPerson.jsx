@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 const AddPerson = () => {
   const initialForm = {
+    uid: "", // Naya field for Unique ID
     fullName: "",
     age: "",
     gender: "Select",
@@ -22,6 +23,7 @@ const AddPerson = () => {
     setIsSubmitting(true);
 
     try {
+      const token = localStorage.getItem("adminToken");
       const dataToSend = new FormData();
       Object.keys(formData).forEach((key) => {
         if (formData[key] !== null && formData[key] !== "") {
@@ -31,20 +33,21 @@ const AddPerson = () => {
 
       const response = await fetch("http://localhost:5000/api/persons/add", {
         method: "POST",
+        headers: { "Authorization": `Bearer ${token}` },
         body: dataToSend,
       });
 
       const data = await response.json();
 
       if (data.success) {
-        alert("✅ Record and Photo saved successfully!");
+        alert("✅ Record saved successfully! " + (formData.uid ? `(UID: ${formData.uid})` : ""));
         setFormData(initialForm);
         document.getElementById("photo-upload").value = "";
       } else {
         alert("❌ Error: " + data.message);
       }
     } catch (error) {
-      alert("⚠️ Could not connect to the backend server!");
+      alert("⚠️ Backend connection error!");
     } finally {
       setIsSubmitting(false);
     }
@@ -66,7 +69,22 @@ const AddPerson = () => {
           1. Personal Details
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5 bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
-          <div className="md:col-span-2">
+          
+          {/* Naya Unique ID Field */}
+          <div>
+            <label className="block text-sm font-bold text-indigo-600 dark:text-indigo-400 mb-1">
+              Unique ID (UID)
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. MA-2024-001"
+              className="w-full px-4 py-2 bg-white dark:bg-gray-700 border-2 border-indigo-100 dark:border-indigo-900 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+              value={formData.uid}
+              onChange={(e) => setFormData({ ...formData, uid: e.target.value })}
+            />
+          </div>
+
+          <div className="md:col-span-3">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Full Name (बेघर लाभार्थीचे नाव) *
             </label>

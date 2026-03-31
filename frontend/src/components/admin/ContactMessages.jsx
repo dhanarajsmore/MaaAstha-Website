@@ -5,10 +5,15 @@ const ContactMessages = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const adminRole = localStorage.getItem("adminRole");
+
   const loadMessages = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/contacts/all");
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch("http://localhost:5000/api/contacts/all", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
       const json = await res.json();
       if (json.success) setMessages(json.data);
     } catch (e) {
@@ -23,7 +28,11 @@ const ContactMessages = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this message permanently?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/contacts/delete/${id}`, { method: "DELETE" });
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch(`http://localhost:5000/api/contacts/delete/${id}`, { 
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
       if (res.ok) loadMessages();
     } catch (e) { alert("Failed to delete message"); }
   };
@@ -76,12 +85,16 @@ const ContactMessages = () => {
                     {new Date(msg.createdAt).toLocaleString("en-IN")}
                   </td>
                   <td className="p-4 flex justify-center">
-                    <button 
-                      onClick={() => handleDelete(msg._id)}
-                      className="flex items-center gap-1.5 text-xs font-bold uppercase px-3 py-1.5 rounded-lg transition-all shadow-sm bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-600 hover:text-white dark:bg-rose-900/40 dark:text-rose-400 dark:border-rose-800/50 dark:hover:bg-rose-600 dark:hover:text-white dark:hover:border-transparent"
-                    >
-                      <Trash2 size={14} strokeWidth={2.5} /> Delete
-                    </button>
+                    {adminRole === "superadmin" ? (
+                      <button 
+                        onClick={() => handleDelete(msg._id)}
+                        className="flex items-center gap-1.5 text-xs font-bold uppercase px-3 py-1.5 rounded-lg transition-all shadow-sm bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-600 hover:text-white dark:bg-rose-900/40 dark:text-rose-400 dark:border-rose-800/50 dark:hover:bg-rose-600 dark:hover:text-white dark:hover:border-transparent"
+                      >
+                        <Trash2 size={14} strokeWidth={2.5} /> Delete
+                      </button>
+                    ) : (
+                      <span className="text-xs text-slate-400 italic">View Only</span>
+                    )}
                   </td>
                 </tr>
               ))

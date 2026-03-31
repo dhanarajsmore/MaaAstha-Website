@@ -8,11 +8,13 @@ const {
   deletePerson,
   getDashboardStats,
 } = require("../controllers/personController");
+const { protect, restrictTo } = require("../middleware/authMiddleware");
 
-router.get("/stats", getDashboardStats);
-router.post("/add", upload.single("image"), addPerson);
-router.get("/all", getAllPersons);
-router.patch("/update/:id", updatePersonStatus);
-router.delete("/delete/:id", deletePerson);
+// Stats route hamesha /:id waale routes se upar rakho taaki conflict na ho
+router.get("/stats", protect, getDashboardStats);
+router.get("/all", protect, getAllPersons);
+router.post("/add", protect, upload.single("image"), addPerson);
+router.patch("/update/:id", protect, updatePersonStatus);
+router.delete("/delete/:id", protect, restrictTo("superadmin"), deletePerson);
 
 module.exports = router;

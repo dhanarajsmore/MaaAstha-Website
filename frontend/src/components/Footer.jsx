@@ -73,6 +73,14 @@ const Footer = () => {
           </Link>
         </div>
       </div>
+
+      {/* Bottom Footer Area (Cleaned) */}
+      <div className="container mx-auto px-6 mt-12 pt-6 border-t border-white/20 flex justify-center items-center text-sm text-gray-300">
+        <p className="text-center">
+          © {new Date().getFullYear()} Maa Astha Samajik Vikas Seva Sanstha. All
+          rights reserved.
+        </p>
+      </div>
     </footer>
   );
 };

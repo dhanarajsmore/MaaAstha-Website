@@ -11,7 +11,9 @@ const MissingPeople = () => {
   useEffect(() => {
     const fetchMissingPersons = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/missing-persons/all");
+        const response = await fetch(
+          "http://localhost:5000/api/missing-persons/all",
+        );
         const data = await response.json();
         if (data.success) {
           setMissingPersons(data.data);
@@ -26,7 +28,9 @@ const MissingPeople = () => {
   }, []);
 
   const filteredPersons = missingPersons.filter((person) => {
-    const matchName = person.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchName = person.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
     const matchMinAge = minAge === "" || person.age >= parseInt(minAge);
     const matchMaxAge = maxAge === "" || person.age <= parseInt(maxAge);
     return matchName && matchMinAge && matchMaxAge;
@@ -40,7 +44,8 @@ const MissingPeople = () => {
             Help Us Find Them
           </h1>
           <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg">
-            Agar aapne inme se kisi ko bhi dekha hai, toh turant NGO ko inform karein. Ek call kisi ki zindagi badal sakti hai.
+            Agar aapne inme se kisi ko bhi dekha hai, toh turant NGO ko inform
+            karein. Ek call kisi ki zindagi badal sakti hai.
           </p>
         </div>
 
@@ -57,7 +62,9 @@ const MissingPeople = () => {
           </div>
 
           <div className="w-full md:w-1/2 flex gap-4 items-center md:justify-end">
-            <span className="text-gray-600 dark:text-gray-300 font-semibold hidden md:block">Age:</span>
+            <span className="text-gray-600 dark:text-gray-300 font-semibold hidden md:block">
+              Age:
+            </span>
             <input
               type="number"
               placeholder="Min"
@@ -77,7 +84,9 @@ const MissingPeople = () => {
         </div>
 
         {loading ? (
-          <div className="text-center py-20 text-gray-500 dark:text-gray-400">Loading cases...</div>
+          <div className="text-center py-20 text-gray-500 dark:text-gray-400">
+            Loading cases...
+          </div>
         ) : filteredPersons.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPersons.map((person) => (
@@ -87,9 +96,15 @@ const MissingPeople = () => {
         ) : (
           <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors duration-300">
             <div className="text-6xl mb-4">🤷‍♂️</div>
-            <h3 className="text-2xl font-bold font-heading text-gray-800 dark:text-white mb-2">No active cases right now.</h3>
+            <h3 className="text-2xl font-bold font-heading text-gray-800 dark:text-white mb-2">
+              No active cases right now.
+            </h3>
             <button
-              onClick={() => { setSearchTerm(""); setMinAge(""); setMaxAge(""); }}
+              onClick={() => {
+                setSearchTerm("");
+                setMinAge("");
+                setMaxAge("");
+              }}
               className="mt-6 text-green-600 font-semibold hover:underline"
             >
               Clear all filters
