@@ -10,6 +10,33 @@ const RescueRequest = () => {
   });
   const [loading, setLoading] = useState(false);
 
+  // 🚀 NAYA FUNCTION: GPS Location fetch karne ke liye
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Aapka browser GPS support nahi karta. Kripya location type karein.");
+      return;
+    }
+
+    setFormData((prev) => ({ ...prev, location: "📍 Fetching exact GPS location..." }));
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const mapLink = `https://www.google.com/maps?q=${lat},${lng}`;
+        
+        setFormData((prev) => ({
+          ...prev,
+          location: `GPS Pin: ${mapLink}\n(Aap yahan aas-paas ka landmark bhi likh sakte hain)`
+        }));
+      },
+      (error) => {
+        alert("Location nahi mil paayi. Kripya apna GPS/Location on karein aur permission allow karein.");
+        setFormData((prev) => ({ ...prev, location: "" }));
+      }
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -20,7 +47,6 @@ const RescueRequest = () => {
       submitData.append("reporterName", formData.reporterName);
       submitData.append("reporterPhone", formData.reporterPhone);
       if (formData.photo) {
-        // 🔥 FIX: 'photo' ki jagah 'image' kar diya taaki backend ka multer na fate
         submitData.append("image", formData.photo);
       }
 
@@ -67,20 +93,15 @@ const RescueRequest = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
+          {/* Left Side Guidelines (Same as before) */}
           <div className="lg:w-1/3 space-y-6">
             <div className="bg-ngo-red text-white p-8 rounded-2xl shadow-lg text-center">
-              <h2 className="text-2xl font-bold font-heading mb-2">
-                Need Urgent Help?
-              </h2>
-              <p className="text-red-100 mb-6">
-                Form bharne ka time nahi hai? Direct call karein:
-              </p>
+              <h2 className="text-2xl font-bold font-heading mb-2">Need Urgent Help?</h2>
+              <p className="text-red-100 mb-6">Form bharne ka time nahi hai? Direct call karein:</p>
               <div className="bg-white text-ngo-red text-3xl font-mono font-bold py-4 rounded-xl shadow-inner">
                 +91 98765 43210
               </div>
-              <p className="mt-4 text-sm font-medium">
-                Available 24/7 in Navi Mumbai/Kalyan
-              </p>
+              <p className="mt-4 text-sm font-medium">Available 24/7 in Navi Mumbai/Kalyan</p>
             </div>
 
             <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 transition-colors duration-300">
@@ -88,53 +109,50 @@ const RescueRequest = () => {
                 📋 Rescue Guidelines
               </h3>
               <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
-                <li className="flex items-start gap-2">
-                  <span className="text-ngo-green">✓</span> Kripya exact
-                  location aur landmark batayein.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-ngo-green">✓</span> Agar possible ho,
-                  toh team aane tak us insaan ke paas hi rahein.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-ngo-green">✓</span> Dur se ek photo
-                  zaroor kheenchiye aur upload karein.
-                </li>
-                <li className="flex items-start gap-2 text-red-500 font-semibold">
-                  <span>⚠️</span> Fake requests na dalein, ye kisi ki jaan ka
-                  sawal ho sakta hai.
-                </li>
+                <li className="flex items-start gap-2"><span className="text-ngo-green">✓</span> Kripya exact location aur landmark batayein.</li>
+                <li className="flex items-start gap-2"><span className="text-ngo-green">✓</span> Agar possible ho, toh team aane tak us insaan ke paas hi rahein.</li>
+                <li className="flex items-start gap-2"><span className="text-ngo-green">✓</span> Dur se ek photo zaroor kheenchiye aur upload karein.</li>
+                <li className="flex items-start gap-2 text-red-500 font-semibold"><span>⚠️</span> Fake requests na dalein, ye kisi ki jaan ka sawal ho sakta hai.</li>
               </ul>
             </div>
           </div>
 
+          {/* Right Side Form */}
           <div className="lg:w-2/3 bg-white dark:bg-gray-800 p-8 md:p-10 rounded-2xl shadow-xl border-t-4 border-ngo-red transition-colors duration-300">
             <h2 className="text-2xl font-heading font-bold text-ngo-dark dark:text-white mb-6">
               Rescue Details Form
             </h2>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
+              
+              {/* 🚀 UPDATED LOCATION FIELD WITH GPS BUTTON */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                  Exact Location / Landmark{" "}
-                  <span className="text-ngo-red">*</span>
+                  Exact Location / Landmark <span className="text-ngo-red">*</span>
                 </label>
-                <input
-                  required
-                  type="text"
-                  className="w-full p-4 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-ngo-red focus:border-ngo-red outline-none transition-colors"
-                  placeholder="E.g., Outside Kalyan Station Platform 1 ticket counter"
-                  value={formData.location}
-                  onChange={(e) =>
-                    setFormData({ ...formData, location: e.target.value })
-                  }
-                />
+                <div className="relative">
+                  <textarea
+                    required
+                    rows="3"
+                    className="w-full p-4 pr-14 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-ngo-red focus:border-ngo-red outline-none transition-colors resize-none"
+                    placeholder="E.g., Outside Kalyan Station Platform 1. Ya phir '📍' button dabayein GPS ke liye."
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  ></textarea>
+                  <button
+                    type="button"
+                    onClick={getLocation}
+                    title="Get Exact GPS Location"
+                    className="absolute right-3 top-3 p-3 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-full transition-colors flex items-center justify-center shadow-md border border-blue-200"
+                  >
+                    📍
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                  Description of the Person's Condition{" "}
-                  <span className="text-ngo-red">*</span>
+                  Description of the Person's Condition <span className="text-ngo-red">*</span>
                 </label>
                 <textarea
                   required
@@ -142,9 +160,7 @@ const RescueRequest = () => {
                   className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-ngo-green transition-colors resize-none"
                   placeholder="Kapde kaise pehne hain? Chot lagi hai kya? Age kitni lag rahi hai?"
                   value={formData.condition}
-                  onChange={(e) =>
-                    setFormData({ ...formData, condition: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                 ></textarea>
               </div>
 
@@ -157,25 +173,19 @@ const RescueRequest = () => {
                   id="photo-upload"
                   accept="image/*"
                   className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 dark:file:bg-gray-600 file:text-ngo-red dark:file:text-red-400 hover:file:bg-red-100 transition-colors"
-                  onChange={(e) =>
-                    setFormData({ ...formData, photo: e.target.files[0] })
-                  }
+                  onChange={(e) => setFormData({ ...formData, photo: e.target.files[0] })}
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100 dark:border-gray-700">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                    Your Name
-                  </label>
+                  <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Your Name</label>
                   <input
                     type="text"
                     className="w-full p-4 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-ngo-red focus:border-ngo-red outline-none transition-colors"
                     placeholder="Enter your name"
                     value={formData.reporterName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, reporterName: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, reporterName: e.target.value })}
                   />
                 </div>
                 <div>
@@ -188,12 +198,7 @@ const RescueRequest = () => {
                     className="w-full p-4 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-ngo-red focus:border-ngo-red outline-none transition-colors"
                     placeholder="So we can contact you"
                     value={formData.reporterPhone}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        reporterPhone: e.target.value,
-                      })
-                    }
+                    onChange={(e) => setFormData({ ...formData, reporterPhone: e.target.value })}
                   />
                 </div>
               </div>

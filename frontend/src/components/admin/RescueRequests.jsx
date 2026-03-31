@@ -10,9 +10,9 @@ const RescueRequests = () => {
   const loadRequests = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("adminToken"); // 🔐 KEY ADDED
+      const token = localStorage.getItem("adminToken");
       const res = await fetch("http://localhost:5000/api/rescue-requests/all", {
-        headers: { "Authorization": `Bearer ${token}` } // 🔐 HEADER ADDED
+        headers: { "Authorization": `Bearer ${token}` }
       });
       const json = await res.json();
       if (json.success) setRequests(json.data);
@@ -25,12 +25,12 @@ const RescueRequests = () => {
   const handleUpdateStatus = async (id, newStatus) => {
     if (!window.confirm(`Mark this alert as ${newStatus}?`)) return;
     try {
-      const token = localStorage.getItem("adminToken"); // 🔐 KEY ADDED
+      const token = localStorage.getItem("adminToken");
       const res = await fetch(`http://localhost:5000/api/rescue-requests/update/${id}`, {
         method: "PATCH", 
         headers: { 
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` // 🔐 HEADER ADDED
+          "Authorization": `Bearer ${token}`
         }, 
         body: JSON.stringify({ status: newStatus }),
       });
@@ -44,17 +44,17 @@ const RescueRequests = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Bhai, delete karna hai?")) return;
     try {
-      const token = localStorage.getItem("adminToken"); // 🔐 KEY ADDED
+      const token = localStorage.getItem("adminToken");
       const res = await fetch(`http://localhost:5000/api/rescue-requests/delete/${id}`, { 
         method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` } // 🔐 HEADER ADDED
+        headers: { "Authorization": `Bearer ${token}` }
       });
       const data = await res.json();
       if (res.ok) {
         loadRequests();
         setSelectedReq(null);
       } else {
-        alert(data.message || "Delete failed! You might not have permission."); // Super Admin Check Alert
+        alert(data.message || "Delete failed! You might not have permission.");
       }
     } catch (e) { alert("Delete failed!"); }
   };
@@ -64,6 +64,32 @@ const RescueRequests = () => {
     return viewMode === "active" ? !isResolved : isResolved;
   });
 
+  // 🚀 NAYA FUNCTION: Link ko pakad kar Button banane ke liye
+  const formatLocationText = (text) => {
+    if (!text) return "N/A";
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    
+    return parts.map((part, i) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={i}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()} // Taaki row click trigger na ho
+            className="inline-flex items-center gap-1.5 px-3 py-1 mt-1 mb-1 bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 rounded-lg font-bold text-xs hover:bg-blue-200 dark:hover:bg-blue-800/60 transition-colors border border-blue-200 dark:border-blue-700/50 shadow-sm"
+          >
+            🗺️ View on Maps
+          </a>
+        );
+      }
+      // Agar "\n" hai toh usko proper line break (<br/>) mein convert karo
+      return <span key={i}>{part.split('\n').map((str, idx) => <React.Fragment key={idx}>{str}<br/></React.Fragment>)}</span>;
+    });
+  };
+
   const DetailRow = ({ icon: Icon, label, value }) => (
     <div className="flex items-start gap-3.5">
       <div className="mt-0.5 p-2 rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400">
@@ -71,7 +97,7 @@ const RescueRequests = () => {
       </div>
       <div className="flex-1">
         <p className="text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide">{label}</p>
-        <p className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5 leading-relaxed">{value || "N/A"}</p>
+        <div className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5 leading-relaxed">{value || "N/A"}</div>
       </div>
     </div>
   );
@@ -112,7 +138,10 @@ const RescueRequests = () => {
               <tr><td colSpan="5" className="p-10 text-center text-slate-500">No {viewMode} alerts right now.</td></tr>
             ) : filteredRequests.map((r) => (
                 <tr key={r._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
-                  <td className="p-5 font-semibold text-slate-900 dark:text-white max-w-[200px] truncate" title={r.location}>{r.location}</td>
+                  {/* 🚀 Location Formatting in Table */}
+                  <td className="p-5 font-semibold text-slate-900 dark:text-white max-w-[250px]" title={r.location}>
+                    {formatLocationText(r.location)}
+                  </td>
                   <td className="p-5 text-slate-600 dark:text-slate-300 font-medium">{r.condition}</td>
                   <td className="p-5">
                     <div className="text-slate-800 dark:text-slate-200 font-medium">{r.reporterName || "Anonymous"}</div>
@@ -221,7 +250,8 @@ const RescueRequests = () => {
 
                 <div className="w-full lg:w-7/12 space-y-8">
                   <div className="space-y-6 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-inner">
-                    <DetailRow icon={MapPin} label="Exact Location Found" value={selectedReq.location} />
+                    {/* 🚀 Location Formatting in Modal */}
+                    <DetailRow icon={MapPin} label="Exact Location Found" value={formatLocationText(selectedReq.location)} />
                     <DetailRow icon={Activity} label="Observed Condition" value={selectedReq.condition} />
                   </div>
 
