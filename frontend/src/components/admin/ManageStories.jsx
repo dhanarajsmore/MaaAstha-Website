@@ -20,7 +20,7 @@ const ManageStories = () => {
   const loadStories = async () => {
     setLoading(true);
     try {
-      const res = await fetch("https://maaastha-website.onrender.com/api/stories/all");
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/stories/all");
       const json = await res.json();
       if (json.success) setStories(json.data);
     } catch (e) {
@@ -48,7 +48,7 @@ const ManageStories = () => {
       if (formData.afterImage)
         dataToSend.append("afterImage", formData.afterImage);
 
-      const res = await fetch("https://maaastha-website.onrender.com/api/stories/add", {
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/stories/add", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: dataToSend,
@@ -81,7 +81,7 @@ const ManageStories = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await fetch(
-        `https://maaastha-website.onrender.com/api/stories/delete/${id}`,
+        `https://maaastha-website-bb9c.onrender.com/api/stories/delete/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

@@ -29,7 +29,7 @@ const Donation = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await fetch("https://maaastha-website.onrender.com/api/donations/add", {
+      const response = await fetch("https://maaastha-website-bb9c.onrender.com/api/donations/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

@@ -36,7 +36,7 @@ const MissingReports = () => {
     setLoadingClaims(true);
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("https://maaastha-website.onrender.com/api/reports/all", {
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/reports/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
@@ -51,7 +51,7 @@ const MissingReports = () => {
   const loadCases = async () => {
     setLoadingCases(true);
     try {
-      const res = await fetch("https://maaastha-website.onrender.com/api/missing-persons/all");
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/missing-persons/all");
       const json = await res.json();
       if (json.success) setCases(json.data);
     } catch (e) {
@@ -71,7 +71,7 @@ const MissingReports = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await fetch(
-        `https://maaastha-website.onrender.com/api/reports/delete/${id}`,
+        `https://maaastha-website-bb9c.onrender.com/api/reports/delete/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -93,7 +93,7 @@ const MissingReports = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await fetch(
-        `https://maaastha-website.onrender.com/api/missing-persons/delete/${id}`,
+        `https://maaastha-website-bb9c.onrender.com/api/missing-persons/delete/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -124,7 +124,7 @@ const MissingReports = () => {
       }
 
       const response = await fetch(
-        "https://maaastha-website.onrender.com/api/missing-persons/add",
+        "https://maaastha-website-bb9c.onrender.com/api/missing-persons/add",
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
@@ -424,7 +424,7 @@ const MissingReports = () => {
                         src={
                           person.imageUrl?.startsWith("http")
                             ? person.imageUrl
-                            : `https://maaastha-website.onrender.com${person.imageUrl}`
+                            : `https://maaastha-website-bb9c.onrender.com${person.imageUrl}`
                         }
                         alt={person.fullName || person.name}
                         className="w-full h-full object-cover"

@@ -6,7 +6,7 @@ const MissingPersonCard = ({ person }) => {
 
   const imageUrl = person.imageUrl || person.image;
   const imageSrc = imageUrl 
-    ? (imageUrl.startsWith("http") ? imageUrl : `https://maaastha-website.onrender.com${imageUrl}`) 
+    ? (imageUrl.startsWith("http") ? imageUrl : `https://maaastha-website-bb9c.onrender.com${imageUrl}`) 
     : "https://via.placeholder.com/300x400?text=No+Image";
 
   return (

@@ -31,7 +31,7 @@ const AddPerson = () => {
         }
       });
 
-      const response = await fetch("https://maaastha-website.onrender.com/api/persons/add", {
+      const response = await fetch("https://maaastha-website-bb9c.onrender.com/api/persons/add", {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}` },
         body: dataToSend,

@@ -22,7 +22,7 @@ const About = () => {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const res = await fetch("https://maaastha-website.onrender.com/api/stories/all");
+        const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/stories/all");
         const json = await res.json();
         if (json.success) setStories(json.data);
       } catch (error) {

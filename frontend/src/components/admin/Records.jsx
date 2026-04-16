@@ -50,7 +50,7 @@ const Records = () => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem("adminToken");
-      const response = await fetch("https://maaastha-website.onrender.com/api/persons/all", {
+      const response = await fetch("https://maaastha-website-bb9c.onrender.com/api/persons/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -92,7 +92,7 @@ const Records = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        `https://maaastha-website.onrender.com/api/persons/update/${personId}`,
+        `https://maaastha-website-bb9c.onrender.com/api/persons/update/${personId}`,
         {
           method: "PATCH",
           headers: {
@@ -119,7 +119,7 @@ const Records = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        `https://maaastha-website.onrender.com/api/persons/update/${reunionModal._id}`,
+        `https://maaastha-website-bb9c.onrender.com/api/persons/update/${reunionModal._id}`,
         {
           method: "PATCH",
           headers: {
@@ -181,7 +181,7 @@ const Records = () => {
       try {
         const token = localStorage.getItem("adminToken");
         const res = await fetch(
-          `https://maaastha-website.onrender.com/api/persons/delete/${id}`,
+          `https://maaastha-website-bb9c.onrender.com/api/persons/delete/${id}`,
           {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` },
@@ -746,7 +746,7 @@ const Records = () => {
                             selectedPerson.imageUrl || selectedPerson.image
                           ).startsWith("http")
                             ? selectedPerson.imageUrl || selectedPerson.image
-                            : `https://maaastha-website.onrender.com${selectedPerson.imageUrl || selectedPerson.image}`
+                            : `https://maaastha-website-bb9c.onrender.com${selectedPerson.imageUrl || selectedPerson.image}`
                         }
                         alt="Profile"
                         className="w-full h-full object-cover"

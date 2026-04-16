@@ -30,7 +30,7 @@ const Contact = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("https://maaastha-website.onrender.com/api/contacts", {
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/contacts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

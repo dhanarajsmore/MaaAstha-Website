@@ -26,7 +26,7 @@ const RescueRequests = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("https://maaastha-website.onrender.com/api/rescue-requests/all", {
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/rescue-requests/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
@@ -47,7 +47,7 @@ const RescueRequests = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await fetch(
-        `https://maaastha-website.onrender.com/api/rescue-requests/update/${id}`,
+        `https://maaastha-website-bb9c.onrender.com/api/rescue-requests/update/${id}`,
         {
           method: "PATCH",
           headers: {
@@ -71,7 +71,7 @@ const RescueRequests = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await fetch(
-        `https://maaastha-website.onrender.com/api/rescue-requests/delete/${id}`,
+        `https://maaastha-website-bb9c.onrender.com/api/rescue-requests/delete/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -330,7 +330,7 @@ const RescueRequests = () => {
                         src={
                           selectedReq.photoUrl.startsWith("http")
                             ? selectedReq.photoUrl
-                            : `https://maaastha-website.onrender.com${selectedReq.photoUrl}`
+                            : `https://maaastha-website-bb9c.onrender.com${selectedReq.photoUrl}`
                         }
                         alt="Rescue Subject"
                         className="w-full h-full object-cover"

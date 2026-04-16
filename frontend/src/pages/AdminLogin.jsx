@@ -22,7 +22,7 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://maaastha-website.onrender.com/api/auth/login", {
+      const response = await fetch("https://maaastha-website-bb9c.onrender.com/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),

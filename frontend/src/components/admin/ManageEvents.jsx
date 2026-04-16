@@ -19,7 +19,7 @@ const ManageEvents = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("https://maaastha-website.onrender.com/api/events/all", {
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/events/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
@@ -39,7 +39,7 @@ const ManageEvents = () => {
     if (!window.confirm("Delete this event permanently?")) return;
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`https://maaastha-website.onrender.com/api/events/delete/${id}`, {
+      const res = await fetch(`https://maaastha-website-bb9c.onrender.com/api/events/delete/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -66,7 +66,7 @@ const ManageEvents = () => {
         if (formData[key] !== null && formData[key] !== "")
           dataToSend.append(key, formData[key]);
       });
-      const response = await fetch("https://maaastha-website.onrender.com/api/events/add", {
+      const response = await fetch("https://maaastha-website-bb9c.onrender.com/api/events/add", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: dataToSend,
@@ -215,7 +215,7 @@ const ManageEvents = () => {
                       src={
                         evt.imageUrl.startsWith("http")
                           ? evt.imageUrl
-                          : `https://maaastha-website.onrender.com${evt.imageUrl}`
+                          : `https://maaastha-website-bb9c.onrender.com${evt.imageUrl}`
                       }
                       alt={evt.title}
                       className="w-full h-full object-cover"

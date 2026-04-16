@@ -89,7 +89,7 @@ const RescueRequest = () => {
         submitData.append("image", formData.photo);
       }
 
-      const res = await fetch("https://maaastha-website.onrender.com/api/rescue-requests/add", {
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/rescue-requests/add", {
         method: "POST",
         body: submitData,
       });

@@ -11,7 +11,7 @@ const ContactMessages = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("https://maaastha-website.onrender.com/api/contacts/all", {
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/contacts/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
@@ -32,7 +32,7 @@ const ContactMessages = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await fetch(
-        `https://maaastha-website.onrender.com/api/contacts/delete/${id}`,
+        `https://maaastha-website-bb9c.onrender.com/api/contacts/delete/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

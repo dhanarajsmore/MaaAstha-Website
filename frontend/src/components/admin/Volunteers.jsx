@@ -13,7 +13,7 @@ const Volunteers = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken"); 
-      const res = await fetch("https://maaastha-website.onrender.com/api/volunteers/all", {
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/volunteers/all", {
         headers: { "Authorization": `Bearer ${token}` } 
       });
       const json = await res.json();
@@ -28,7 +28,7 @@ const Volunteers = () => {
     if (!window.confirm("Mark this volunteer as Verified?")) return;
     try {
       const token = localStorage.getItem("adminToken"); 
-      const res = await fetch(`https://maaastha-website.onrender.com/api/volunteers/update/${id}`, {
+      const res = await fetch(`https://maaastha-website-bb9c.onrender.com/api/volunteers/update/${id}`, {
         method: "PATCH", 
         headers: { 
           "Content-Type": "application/json",
@@ -47,7 +47,7 @@ const Volunteers = () => {
     if (!window.confirm("Delete permanently?")) return;
     try {
       const token = localStorage.getItem("adminToken"); 
-      const res = await fetch(`https://maaastha-website.onrender.com/api/volunteers/delete/${id}`, { 
+      const res = await fetch(`https://maaastha-website-bb9c.onrender.com/api/volunteers/delete/${id}`, { 
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` } 
       });

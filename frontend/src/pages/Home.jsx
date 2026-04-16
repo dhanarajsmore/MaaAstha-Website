@@ -49,7 +49,7 @@ const Home = () => {
   useEffect(() => {
     const fetchLiveStats = async () => {
       try {
-        const res = await fetch("https://maaastha-website.onrender.com/api/persons/stats");
+        const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/persons/stats");
         const json = await res.json();
         if (json.success) {
           setStats({

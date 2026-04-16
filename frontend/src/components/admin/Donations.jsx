@@ -18,7 +18,7 @@ const Donations = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("https://maaastha-website.onrender.com/api/donations/all", {
+      const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/donations/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
@@ -39,7 +39,7 @@ const Donations = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await fetch(
-        `https://maaastha-website.onrender.com/api/donations/update/${id}`,
+        `https://maaastha-website-bb9c.onrender.com/api/donations/update/${id}`,
         {
           method: "PATCH",
           headers: {
@@ -60,7 +60,7 @@ const Donations = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await fetch(
-        `https://maaastha-website.onrender.com/api/donations/delete/${id}`,
+        `https://maaastha-website-bb9c.onrender.com/api/donations/delete/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
