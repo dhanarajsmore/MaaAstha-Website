@@ -30,23 +30,18 @@ const loginAdmin = async (req, res) => {
 
 const seedAdmins = async (req, res) => {
   try {
-    await Admin.deleteMany({});
-
+    await Admin.deleteMany({}); // Sab purana clear
     await Admin.create({
       username: "superkush",
       password: "admin123",
       role: "superadmin",
     });
-
     await Admin.create({
       username: "ngosir",
       password: "ngo123",
       role: "admin",
     });
-
-    res
-      .status(201)
-      .json({ success: true, message: "Accounts force reset and secured!" });
+    res.status(201).json({ success: true, message: "Accounts force reset and secured!" });
   } catch (error) {
     console.error("Seed Error:", error);
     res.status(500).json({ success: false, message: "Server error" });
