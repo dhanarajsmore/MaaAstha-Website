@@ -86,7 +86,7 @@ const RescueRequest = () => {
       submitData.append("reporterName", formData.reporterName);
       submitData.append("reporterPhone", formData.reporterPhone);
       if (formData.photo) {
-        submitData.append("image", formData.photo);
+        submitData.append("photo", formData.photo);
       }
 
       const res = await fetch("https://maaastha-website-bb9c.onrender.com/api/rescue-requests/add", {
