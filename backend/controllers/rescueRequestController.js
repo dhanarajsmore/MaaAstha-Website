@@ -20,7 +20,11 @@ const addRescueRequest = async (req, res) => {
         .json({ success: false, message: "Missing fields" });
     }
 
-    const photoUrl = req.file ? req.file.path : "";
+    // 🔥 FIX: Cloudinary photo save logic updated
+    let photoUrl = "";
+    if (req.file && req.file.path) {
+      photoUrl = req.file.path;
+    }
 
     const request = await RescueRequest.create({
       location,
@@ -30,9 +34,10 @@ const addRescueRequest = async (req, res) => {
       photoUrl,
     });
 
-    res.status(201).json({ success: true, data: request });
+    res.status(201).json({ success: true, message: "Rescue request submitted successfully", data: request });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server Error" });
+    console.error("Rescue Request Error:", error);
+    res.status(500).json({ success: false, message: "Server Error", error: error.message });
   }
 };
 

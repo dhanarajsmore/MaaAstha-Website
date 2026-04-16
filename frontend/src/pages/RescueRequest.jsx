@@ -41,7 +41,7 @@ const RescueRequest = () => {
         setFormData((prev) => ({
           ...prev,
           gpsLocation: `GPS Pin: ${mapLink}`,
-          gpsUrl: mapLink, // Save raw link
+          gpsUrl: mapLink,
         }));
         setGpsStatus("success");
       },
@@ -95,7 +95,8 @@ const RescueRequest = () => {
       });
       const data = await res.json();
 
-      if (data.success) {
+      // 🔥 FIX: [object Object] wala issue yahan solve ho gaya
+      if (res.ok && data.success) {
         alert("Rescue alert sent successfully! Help is on the way.");
         setFormData({
           manualLocation: "",
@@ -108,7 +109,9 @@ const RescueRequest = () => {
         setGpsStatus("idle");
         document.getElementById("photo-upload").value = "";
       } else {
-        alert(data.message || "Failed to send alert.");
+        // Agar backend error deta hai toh ab clean text dikhega
+        const errorMsg = typeof data.message === 'string' ? data.message : JSON.stringify(data.error || "Failed to send alert.");
+        alert("Error: " + errorMsg);
       }
     } catch (error) {
       alert("Server error. Please try again or call the emergency number.");
